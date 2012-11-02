@@ -7,22 +7,28 @@
 
 .i-slider {
 	overflow: hidden;
+    width: 30px;
 	height: 30px;
 }
 
 .i-slider .i-container {
 	overflow: hidden;
-	height: 30px;
-	width: 100%;
 
 	padding: 0;
 	border: none;
 }
 
-.i-slider .i-handle {
-	width: 14px;
-	height: 24px;
+.i-slider.i-horizontal .i-container {
+	height: 30px;
+	width: 100%;
+}
 
+.i-slider.i-vertical .i-container {
+	height: 100%;
+	width: 30px;
+}
+
+.i-slider .i-handle {
 	background-color: blue;
 
 	position: relative;
@@ -31,18 +37,38 @@
     border-radius: 4px;
 }
 
-.i-horizontal .i-handle {
-	top: 0px !important;
+.i-slider.i-horizontal .i-handle {
+	top: 0px;
+	
+    width: 14px;
+	height: 24px;
+
+}
+
+.i-slider.i-vertical .i-handle {
+	left: 0px;
+	
+    width: 24px;
+	height: 14px;
+
 }
 
 .i-slider .i-bar {
-	width: 100%;
-	height: 20px;
-
-	margin: 5px 0;
-
 	background-color: #2C62BD;
 
 	float: left;
+}
+
+.i-slider.i-horizontal .i-bar {
+    width: 100%;
+    height: 20px;
+    margin: 5px 0;
+}
+
+
+.i-slider.i-vertical .i-bar {
+	width: 20px;
+	height: 100%;
+	margin: 0 5px;
 }
 

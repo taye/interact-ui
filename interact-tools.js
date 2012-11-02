@@ -19,7 +19,7 @@
 			'min',
 			'max',
 			'step',
-			'width',
+			'length',
 			'disabled',
 			'layout'
 		],
@@ -119,7 +119,14 @@
 				this.bar = make('div');
 				this.handle = make('div');
 
-				this.container.style.width = this.length + 'px';
+                if (this.layout === 'vertical') {
+                    this.element.style.height = this.length + 'px';
+                    this.element.classList.add('i-vertical');
+                }
+                else {
+                    this.element.style.width = this.length + 'px';
+                    this.element.classList.add('i-horizontal');
+                }
 			}
 			else if (element instanceof SVGElement) {
 				this.element = element;
@@ -195,15 +202,18 @@
 	function sliderDragMove (event) {
 		var handle = event.target,
 			slider = getSliderFromHandle(handle),
+            horizontal = (slider.layout === 'horizontal'),
 
 			top = slider.element.offsetTop,
 			left = slider.element.offsetLeft,
 			length = slider.length - Slider.handleSize,
-			x = event.detail.pageX - left,
+			position = (horizontal)?
+                event.detail.pageX - left:
+                event.detail.pageY - top,
 			range = slider.max - slider.min,
 
 			// scale the cursor position according to slider range and dimensions
-			value = x * range / slider.length + slider.min,
+			value = position * range / slider.length + slider.min,
 			offset = value % slider.step || 0,
 			steps = Math.floor(value / slider.step);
 
@@ -216,8 +226,13 @@
 			slider.min: (value > slider.max)?
 				slider.max: value;
 
-		x = (value - slider.min)  * length / range;
-		slider.handle.style.left = x + 'px';
+		position = (value - slider.min)  * length / range;
+        if (horizontal) {
+            slider.handle.style.left = position + 'px';
+        }
+        else {
+            slider.handle.style.top = position + 'px';
+        }
 
 		if (value !== slider.value) {
 			var changeEvent = document.createEvent('Event');

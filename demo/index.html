@@ -8,23 +8,31 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width; initial-scale=1.0" />
 		<title>interact-tools demo</title>
 		<meta name="description" content="Drag, Drop and Resize Tools" />
 		<meta name="author" content="Taye Adeyemi" />
-		<script type="text/javascript" charset="utf-8" 
-src="../interact.js"></script>
-		<script type="text/javascript" charset="utf-8" 
-src="../interact-tools.js"></script>
-		<link rel="stylesheet" href="../interact-tools.css" 
-type="text/css"/>
+		<script type="text/javascript" charset="utf-8" src="../interact.js"></script>
+		<script type="text/javascript" charset="utf-8" src="../interact-tools.js"></script>
+		<link rel="stylesheet" href="../interact-tools.css" type="text/css"/>
 	</head>
 	<body>
-		<div id="horiz_slider" style="float: left"
-            onchange="console.log(event.type, event.value, this.value); horiz_slider_value.innerHTML = event.target.value; "
-            i-slider="true" step="25" length="200" min="100" max="300"
-> </div>
-        <p id="horiz_slider_value" style="float: left" > 100 
-</p>
+        <div>
+            <div id="horiz_slider"
+                onchange="console.log(event.type, event.value, this.value); horiz_slider_value.innerHTML = event.target.value; "
+                i-slider="true" step="25" length="400" min="100" max="300">
+            </div>
+            <br>
+            <p id="horiz_slider_value"> Slide to set value </p>
+        </div>
+        <div>
+            <div id="vert_slider"
+                onchange="console.log(event.type, event.value, this.value); vert_slider_value.innerHTML = event.target.value; "
+                i-slider="true" layout="vertical" step="10" length="400" min="0" max="500">
+            </div>
+            <p id="vert_slider_value"> Slide to set value </p>
+        </div>
+
 	</body>
 </html>
 
