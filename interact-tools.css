@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2012 Taye Adeyemi
+ * Open source under the MIT License.
+ * https://raw.github.com/taye/interact-tools/master/LICENSE
+ */
+
+
+.i-slider {
+	overflow: hidden;
+	height: 30px;
+}
+
+.i-slider .i-container {
+	overflow: hidden;
+	height: 30px;
+	width: 100%;
+
+	padding: 0;
+	border: none;
+}
+
+.i-slider .i-handle {
+	width: 14px;
+	height: 24px;
+
+	background-color: blue;
+
+	position: relative;
+
+    border: solid 3px navy;
+    border-radius: 4px;
+}
+
+.i-horizontal .i-handle {
+	top: 0px !important;
+}
+
+.i-slider .i-bar {
+	width: 100%;
+	height: 20px;
+
+	margin: 5px 0;
+
+	background-color: #2C62BD;
+
+	float: left;
+}
+

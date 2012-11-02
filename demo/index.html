@@ -1,0 +1,30 @@
+<!--
+ // Copyright (c) 2012 Taye Adeyemi
+ // Open source under the MIT License.
+ // https://raw.github.com/taye/interact-tools/master/LICENSE
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>interact-tools demo</title>
+		<meta name="description" content="Drag, Drop and Resize Tools" />
+		<meta name="author" content="Taye Adeyemi" />
+		<script type="text/javascript" charset="utf-8" 
+src="../interact.js"></script>
+		<script type="text/javascript" charset="utf-8" 
+src="../interact-tools.js"></script>
+		<link rel="stylesheet" href="../interact-tools.css" 
+type="text/css"/>
+	</head>
+	<body>
+		<div id="horiz_slider" style="float: left"
+            onchange="console.log(event.type, event.value, this.value); horiz_slider_value.innerHTML = event.target.value; "
+            i-slider="true" step="25" length="200" min="100" max="300"
+> </div>
+        <p id="horiz_slider_value" style="float: left" > 100 
+</p>
+	</body>
+</html>
+
