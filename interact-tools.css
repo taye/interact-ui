@@ -3,132 +3,122 @@
  * Open source under the MIT License.
  * https://raw.github.com/taye/interact-tools/master/LICENSE
  */
-
 .i-bar {
-	background-color: #2C62BD;
-
-	float: left;
-	border-radius: 2px;
-}
+  background-color: #6666ff;
+  float: left;
+  border-radius: 2px; }
 
 .i-handle {
-	background-color: blue;
-
-	position: relative;
-
-    border: solid 3px navy;
-    border-radius: 4px;
-	cursor: pointer;
-}
+  background-color: blue;
+  position: relative;
+  border: solid 3px navy;
+  border-radius: 4px;
+  cursor: pointer; }
 
 /* Slider */
 .i-slider {
-    width: 30px;
-	height: 30px;
-}
-
-.i-slider .i-container {
-	padding: 0;
-	border: none;
-}
-
-.i-slider.i-horizontal .i-container {
-	height: 30px;
-	width: 100%;
-}
-
-.i-slider.i-vertical .i-container {
-	height: 100%;
-	width: 30px;
-}
-
-.i-slider.i-horizontal .i-handle {
-	top: 0px;
-	
-    width: 14px;
-	height: 24px;
-
-}
-
-.i-slider.i-vertical .i-handle {
-	left: 0px;
-	
-    width: 24px;
-	height: 14px;
-
-}
-
-.i-slider.i-horizontal .i-bar {
+  width: 30px;
+  height: 30px; }
+  .i-slider .i-handle:before {
+    content: "";
+    background-color: inherit;
+    border: solid 3px;
+    border-color: inherit;
+    border-radius: 3px;
+    position: absolute; }
+  .i-slider .i-handle:after {
+    content: attr(value);
+    border-radius: 5px;
+    background-color: blue;
+    text-align: center;
+    color: white;
+    position: absolute; }
+  .i-slider .i-handle:not(:active):not(:hover):not(.interact-dragging)::after {
+    display: none; }
+  .i-slider .i-container {
+    padding: 0;
+    border: none; }
+  .i-slider.i-horizontal .i-container {
+    height: 30px;
+    width: 100%; }
+  .i-slider.i-horizontal .i-handle {
+    top: 0px;
+    width: 7px;
+    height: 24px;
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0; }
+    .i-slider.i-horizontal .i-handle:before {
+      top: -3px;
+      right: 7px;
+      width: 7px;
+      height: 24px;
+      border-right: none;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0; }
+    .i-slider.i-horizontal .i-handle:after {
+      width: 40px;
+      top: 30px;
+      left: -20px; }
+  .i-slider.i-horizontal .i-bar {
     width: 100%;
     height: 20px;
-    margin: 5px 0;
-}
-
-
-.i-slider.i-vertical .i-bar {
-	width: 20px;
-	height: 100%;
-	margin: 0 5px;
-}
+    margin: 5px 0; }
+  .i-slider.i-vertical .i-container {
+    height: 100%;
+    width: 30px; }
+  .i-slider.i-vertical .i-handle {
+    left: 0px;
+    width: 24px;
+    height: 14px; }
+  .i-slider.i-vertical .i-bar {
+    width: 20px;
+    height: 100%;
+    margin: 0 5px; }
 
 /* Toggle */
-
 .i-toggle {
-    width: 30px;
-	height: 30px;
-}
+  width: 30px;
+  height: 30px; }
 
 .i-toggle .i-container {
-	padding: 0;
-	border: none;
-}
+  padding: 0;
+  border: none; }
 
 .i-toggle.i-horizontal .i-container {
-	height: 30px;
-	width: 100%;
-}
+  height: 30px;
+  width: 100%; }
 
 .i-toggle.i-vertical .i-container {
-	height: 100%;
-	width: 30px;
-}
+  height: 100%;
+  width: 30px; }
 
 .i-toggle.i-horizontal .i-handle {
-	top: 0px;
-	
-    width: 50%;
-	height: 24px;
-
-}
+  top: 0px;
+  width: 50%;
+  height: 24px; }
 
 .i-toggle.i-vertical .i-handle {
-	left: 0px;
-	
-    width: 24px;
-	height: 50%;
-
-}
+  left: 0px;
+  width: 24px;
+  height: 50%; }
 
 .i-toggle.i-horizontal .i-bar {
-    width: 100%;
-    height: 20px;
-    margin: 5px 0;
-}
-
+  width: 100%;
+  height: 20px;
+  margin: 5px 0; }
 
 .i-toggle.i-vertical .i-bar {
-	width: 20px;
-	height: 100%;
-	margin: 0 5px;
-}
+  width: 20px;
+  height: 100%;
+  margin: 0 5px; }
 
-.i-slider[readonly="true"] .i-handle, .i-toggle[readonly="true"] .i-handle{
-	background-color: #cccccc;
-	border-color: #888888;
-}
+.i-slider[readonly="true"] .i-handle, .i-toggle[readonly="true"] .i-handle {
+  background-color: #cccccc;
+  border-color: #888888; }
 
-.i-slider[readonly="true"] .i-bar, .i-toggle[readonly="true"] .i-bar{
-	background-color: #aaaaaa;
-	border-color: #888888;
-}
+.i-slider[readonly="true"] .i-bar, .i-toggle[readonly="true"] .i-bar {
+  background-color: #aaaaaa;
+  border-color: #888888; }
 
+/* Rounded Style */
