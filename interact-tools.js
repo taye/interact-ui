@@ -15,13 +15,16 @@
 		HTMLElement = window.HTMLElement,
 		SVGElement = window.SVGElement,
 		svgNs = 'http://www.w3.org/2000/svg',
-		optionTypes = [
+		optionAttributes = [
 			'min',
 			'max',
 			'step',
 			'length',
-			'disabled',
-			'layout'
+			'readonly',
+			'orientation',
+			'value',
+			'list',
+			'handle-ratio'
 		],
 		sliders = [],
 		toggles = [],
@@ -79,11 +82,25 @@
 			i = 0;
 
 		for (i = 0; i < elements.length; i++) {
+			var newTool;
+
 			if (elements[i].getAttribute('i-slider') === 'true') {
-				new Slider(elements[i]);
+				newTool = new Slider(elements[i]);
+				sliders.push(newTool);
+			}
+			else if (elements[i].getAttribute('i-toggle') === 'true') {
+				newTool = new Toggle(elements[i]);
+				toggles.push(newTool);
+			}
+			
+			if (newTool) {
+				var onchangeAttribute = newTool.element.getAttribute('onchange');
+				if (onchangeAttribute && !newTool.element.onchange) {
+					newTool.element.onchange = Function(onchangeAttribute);
+				}
 			}
 		}
-	}		
+	}
 
 	function attributeGetter (element) {
 		return 	function (attribute) {
@@ -96,8 +113,8 @@
 			get = attributeGetter(element),
 			i;
 
-		for (i = 0; i < optionTypes.length; i++) {
-			options[optionTypes[i]] = get(optionTypes[i]);
+		for (i = 0; i < optionAttributes.length; i++) {
+			options[optionAttributes[i]] = get(optionAttributes[i]);
 		}
 		return options;
 	}
@@ -109,9 +126,14 @@
 			this.step = Number(options.step) || 10;
 			this.min = Number(options.min) || 0;
 			this.max = Number(options.max) || this.min + 10 * this.step;
-			this.layout = (options.layout == 'vertical' || options.layout === 'horizontal')?
-					options.layout: 'horizontal';
+			this.value = Number(options.value) || 0;
+			this.value = (this.value < this.min)?
+				this.value = this.min: (this.value > this.max)?
+					this.max: this.value;
+			this.orientation = (options.orientation == 'vertical' || options.orientation === 'horizontal')?
+					options.orientation: 'horizontal';
 			this.length = Number(options.length) || 200;
+			this.readonly = (options.readonly === 'true');
 
 			if (element instanceof HTMLElement) {
 				this.element = element;
@@ -119,7 +141,7 @@
 				this.bar = make('div');
 				this.handle = make('div');
 
-                if (this.layout === 'vertical') {
+                if (this.orientation === 'vertical') {
                     this.element.style.height = this.length + 'px';
                     this.element.classList.add('i-vertical');
                 }
@@ -139,8 +161,8 @@
 				this.container.appendChild(this.background);
 			}
 
-			this.element.value = this.min;
-			this.element.setAttribute('value', this.min);
+			this.set(this.value);
+			this.element.readonly = this.readonly;
 
 			this.element.classList.add('i-slider');
 			this.container.classList.add('i-container');
@@ -161,21 +183,180 @@
 		drag: true,
 		autoScroll: false,
 		actionChecker: function (event) {
-				return 'drag';
+				event.preventDefault();
+				/*
+				 * If either the readonly attribute or property of the element
+				 * was changed, make the slider readonly or not accordingly
+				 */
+				var slider = getSliderFromHandle(event.target),
+					readonlyAttribute = slider.element.getAttribute('readonly') === 'true';
+
+				if (readonlyAttribute !== slider.readonly) {
+					slider.readonly = slider.element.readonly = readonlyAttribute;
+				}
+				else if (slider.element.readonly !== slider.readonly) {
+					slider.readonly =
+						slider.element.readonly =
+							(slider.element.readonly === true);
+					slider.element.setAttribute('readonly', slider.readonly);
+				}
+
+				if (!slider.readonly) {
+					return 'drag';
+				}
 			},
-        checkOnHover: true
+        checkOnHover: false
 	};
 
 	Slider.handleSize = 20;
 
-	function Toggle (options) {
-		if (options instanceof HTMLElement) {
-		//	...
-		}
-		else if (options instanceof SVGElement) {
+	Slider.prototype = {
+		set: function (newValue) {
+			var range = this.max - this.min,
+				length = this.length - Slider.handleSize,
+				position = (newValue - this.min) * length / range;
 
+			if (this.orientation === 'horizontal') {
+				this.handle.style.left = position + 'px';
+			}
+			else {
+				this.handle.style.top = position + 'px';
+			}
+
+			if (newValue !== this.value) {
+				var changeEvent = document.createEvent('Event');
+
+				this.element.value = this.value = newValue;
+				this.element.setAttribute('value', this.value);
+
+				changeEvent.initEvent('change', true, true);
+				this.element.dispatchEvent(changeEvent);
+			}
+		}
+	};
+
+	function Toggle (element, options) {
+		if (element instanceof Element) {
+			options = options || getAttributeOptions(element);
+
+			this.value = (options.value == true)? 1: 0;
+			this.orientation = (options.orientation == 'vertical' || options.orientation === 'horizontal')?
+					options.orientation: 'horizontal';
+			this.length = Number(options.length) || 80;
+			this.handleRatio = options['handle-ratio'] || Toggle.handleRatio;
+
+			if (element instanceof HTMLElement) {
+				this.element = element;
+				this.container = make('div')
+				this.bar = make('div');
+				this.handle = make('div');
+
+                if (this.orientation === 'vertical') {
+                    this.element.style.height = this.length + 'px';
+                    this.element.classList.add('i-vertical');
+					this.handle.style.height= this.length * this.handleRatio + 'px';
+                }
+                else {
+                    this.element.style.width = this.length + 'px';
+                    this.element.classList.add('i-horizontal');
+					this.handle.style.width = this.length * this.handleRatio + 'px';
+                }
+			}
+			else if (element instanceof SVGElement) {
+				this.element = element;
+				this.container = make('g')
+				this.bar = make('rect');
+				this.handle = make('rect');
+
+				this.container.appendChild(this.background);
+			}
+
+			this.set(this.value);
+			events.add(this.element, 'click', toggleClick);
+
+			this.element.classList.add('i-toggle');
+			this.container.classList.add('i-container');
+			this.bar.classList.add('i-bar');
+			this.handle.classList.add('i-handle');
+
+			this.container.appendChild(this.bar);
+			this.container.appendChild(this.handle);
+			this.element.appendChild(this.container);
+
+			this.interactable = interact.set(this.handle, Toggle.interactOptions);
+			
+			toggles.push(this);
 		}
 	}
+
+	Toggle.interactOptions = {
+		drag: true,
+		autoScroll: false,
+		actionChecker: function (event) {
+				event.preventDefault();
+				/*
+				 * If either the readonly attribute or property of the element
+				 * was changed, make the toggle readonly or not accordingly
+				 */
+				var toggle = getToggleFromHandle(event.target),
+					readonlyAttribute = toggle.element.getAttribute('readonly') === 'true';
+
+				if (readonlyAttribute !== toggle.readonly) {
+					toggle.readonly = toggle.element.readonly = readonlyAttribute;
+				}
+				else if (toggle.element.readonly !== toggle.readonly) {
+					toggle.readonly =
+						toggle.element.readonly =
+							(toggle.element.readonly === true);
+					toggle.element.setAttribute('readonly', toggle.readonly);
+				}
+
+				if (!toggle.readonly) {
+					return 'drag';
+				}
+			},
+        checkOnHover: false
+	};
+
+	Toggle.handleRatio = 0.6;
+
+	Toggle.prototype = {
+		set: function (newValue) {
+			newValue = (newValue == true)? 1: 0;
+
+			if (this.orientation === 'horizontal') {
+				if (newValue === 0) {
+					this.handle.style.left = 0;
+					this.handle.style.right = "";
+				}
+				else {
+					this.handle.style.left = "";
+					this.handle.style.right = -(this.length * (1 - this.handleRatio) - 6) + 'px';
+				}
+			}
+			else {
+				if (newValue === 0) {
+					this.handle.style.top = 0;
+					this.handle.style.bottom = "";
+				}
+				else {
+					this.handle.style.top = "";
+					this.handle.style.bottom = -(this.length * (1 - this.handleRatio) - 6) + 'px';
+				}
+
+			}
+			if (newValue !== this.value) {
+				var changeEvent = document.createEvent('Event');
+
+				this.element.value = this.value = newValue;
+				this.element.setAttribute('value', this.value);
+
+				changeEvent.initEvent('change', true, true);
+				this.element.dispatchEvent(changeEvent);
+			}
+		}
+	};
+
 
 	function getSliderFromHandle (element) {
 		var i;
@@ -199,10 +380,52 @@
 		return null;
 	}
 
+	function getToggleFromElement (element) {
+		var i;
+
+		for (i = 0; i < toggles.length; i++) {
+			if (toggles[i].element === element) {
+				return toggles[i];
+			}
+		}
+		return null;
+	}
+
+	function getToggleFromHandle (element) {
+		var i;
+
+		for (i = 0; i < toggles.length; i++) {
+			if (toggles[i].handle === element) {
+				return toggles[i];
+			}
+		}
+		return null;
+	}
+
+	function getToggleFromBar (element) {
+		var i;
+
+		for (i = 0; i < toggles.length; i++) {
+			if (toggles[i].bar === element) {
+				return toggles[i];
+			}
+		}
+		return null;
+	}
+
+	function toolTypeMove (event) {
+		if (event.target.parentNode.parentNode.getAttribute('i-slider') === 'true') {
+			sliderDragMove(event);
+		}
+		else if (event.target.parentNode.parentNode.getAttribute('i-toggle') === 'true') {
+			toggleDragMove(event);
+		}
+	}
+
 	function sliderDragMove (event) {
 		var handle = event.target,
 			slider = getSliderFromHandle(handle),
-            horizontal = (slider.layout === 'horizontal'),
+            horizontal = (slider.orientation === 'horizontal'),
 
 			top = slider.element.offsetTop,
 			left = slider.element.offsetLeft,
@@ -226,23 +449,31 @@
 			slider.min: (value > slider.max)?
 				slider.max: value;
 
-		position = (value - slider.min)  * length / range;
-        if (horizontal) {
-            slider.handle.style.left = position + 'px';
-        }
-        else {
-            slider.handle.style.top = position + 'px';
-        }
+		slider.set(value);
+	}
 
-		if (value !== slider.value) {
-			var changeEvent = document.createEvent('Event');
+	function toggleDragMove (event) {
+		var handle = event.target,
+			toggle = getToggleFromHandle(handle),
+            horizontal = (toggle.orientation === 'horizontal'),
 
-			slider.element.value = slider.value = value;
-			slider.element.setAttribute('value', value);
+			top = toggle.element.offsetTop,
+			left = toggle.element.offsetLeft,
+			length = toggle.length,
+			position = (horizontal)?
+                event.detail.pageX - left:
+                event.detail.pageY - top,
+			value = (position < length * 0.3)?
+				0: (position > length * 0.6)?
+					1: toggle.value;
 
-			changeEvent.initEvent('change', true, true);
-			slider.element.dispatchEvent(changeEvent);
-		}
+		toggle.set(value);
+	}
+
+	function toggleClick (event) {
+		var toggle = getToggleFromElement(this);
+
+		toggle.set(!toggle.value);
 	}
 
     function sliderBarDrag (event) {
@@ -250,14 +481,15 @@
            .interactable.simulate('drag');
     }
 
-	events.add(document, 'interactdragmove', sliderDragMove);
+	events.add(document, 'interactdragmove', toolTypeMove);
 	events.add(document, 'DOMContentLoaded', init);
 
 	interact.tools = {
 		Slider: Slider,
 		Toggle: Toggle,
 
-		make: make
+		make: make,
+		makeNs: makeNs
 	}
 }(window));
 
