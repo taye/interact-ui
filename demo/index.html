@@ -15,24 +15,50 @@
 		<script type="text/javascript" charset="utf-8" src="../interact.js"></script>
 		<script type="text/javascript" charset="utf-8" src="../interact-tools.js"></script>
 		<link rel="stylesheet" href="../interact-tools.css" type="text/css"/>
+
+		<style type="text/css">
+			.i-slider, .i-toggle {
+			}
+
+			.i-slider:after, .i-toggle:after {
+				content: attr(value);
+			}
+		</style>
 	</head>
 	<body>
         <div>
             <div id="horiz_slider"
-                onchange="console.log(event.type, event.value, this.value); horiz_slider_value.innerHTML = event.target.value; "
                 i-slider="true" step="25" length="400" min="100" max="300">
             </div>
-            <br>
-            <p id="horiz_slider_value"> Slide to set value </p>
+            <p> Slide to set value </p>
         </div>
         <div>
             <div id="vert_slider"
-                onchange="console.log(event.type, event.value, this.value); vert_slider_value.innerHTML = event.target.value; "
-                i-slider="true" layout="vertical" step="10" length="400" min="0" max="500">
+                i-slider="true" orientation="vertical" step="10" length="200" min="0" max="500">
             </div>
-            <p id="vert_slider_value"> Slide to set value </p>
+            <p> Slide to set value </p>
         </div>
-
+        <div>
+            <div id="readonly_slider"
+				i-slider="true" readonly="true" value="360" step="1" length="200" min="0" max="500">
+            </div>
+            <p> Readonly slider <br> 
+				Changing the "readonly" HTML attribue or DOM property can let you use it.</p>
+        </div>
+        <div>
+            <div id="horiz_toggle"
+                onchange="document.getElementById('readonly_slider').setAttribute('readonly', Boolean(this.value))"
+                i-toggle="true" value="1" orientation="horizongtal" length="200">
+            </div>
+            <p> Slide or click to toggle the readonly attribute of the above slider </p>
+        </div>
+        <div>
+            <div id="vert-toggle"
+				onchange="document.getElementById('horiz_toggle').setAttribute('readonly', Boolean(this.value))"
+				i-toggle="true" value="0" orientation="vertical" handle-ratio="0.4" length="50">
+				</div>
+            <p> Toggle this to change the readonly attribute of the toggle tool above</p>
+        </div>
 	</body>
 </html>
 
