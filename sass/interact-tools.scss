@@ -58,7 +58,7 @@ $handle-border-blue: darken($blue, 20%);
 
             border-radius: 5px;
 
-            background-color: blue;
+            background-color: inherit;
             text-align: center;
             color: white;
 
@@ -138,61 +138,57 @@ $handle-border-blue: darken($blue, 20%);
 .i-toggle {
     width: 30px;
 	height: 30px;
+    
+    .i-container {
+        padding: 0;
+        border: none;
+    }
+    &.i-horizontal {
+        .i-container {
+    	    height: 30px;
+    	    width: 100%;
+        }
+        .i-handle {
+            top: 0px;
+            
+            width: 50%;
+            height: 24px;
+        }
+        .i-bar {
+            width: 100%;
+            height: 20px;
+            margin: 5px 0;
+        }
+    }
+    &.i-vertical {
+        .i-container {
+            height: 100%;
+            width: 30px;
+        }
+        .i-handle {
+            left: 0px;
+            
+            width: 24px;
+            height: 50%;
+
+        }
+        .i-bar {
+            width: 20px;
+            height: 100%;
+            margin: 0 5px;
+        }
+    }
+
 }
 
-.i-toggle .i-container {
-	padding: 0;
-	border: none;
-}
-
-.i-toggle.i-horizontal .i-container {
-	height: 30px;
-	width: 100%;
-}
-
-.i-toggle.i-vertical .i-container {
-	height: 100%;
-	width: 30px;
-}
-
-.i-toggle.i-horizontal .i-handle {
-	top: 0px;
-	
-    width: 50%;
-	height: 24px;
-
-}
-
-.i-toggle.i-vertical .i-handle {
-	left: 0px;
-	
-    width: 24px;
-	height: 50%;
-
-}
-
-.i-toggle.i-horizontal .i-bar {
-    width: 100%;
-    height: 20px;
-    margin: 5px 0;
-}
-
-
-.i-toggle.i-vertical .i-bar {
-	width: 20px;
-	height: 100%;
-	margin: 0 5px;
-}
-
-.i-slider[readonly="true"] .i-handle, .i-toggle[readonly="true"] .i-handle{
+.i-slider[readonly="readonly"] .i-handle, .i-toggle[readonly="readonly"] .i-handle{
 	background-color: #cccccc;
 	border-color: #888888;
 }
 
-.i-slider[readonly="true"] .i-bar, .i-toggle[readonly="true"] .i-bar{
+.i-slider[readonly"readonly"] .i-bar, .i-toggle[readonly="readonly"] .i-bar{
 	background-color: #aaaaaa;
 	border-color: #888888;
 }
-
 
 /* Rounded Style */
