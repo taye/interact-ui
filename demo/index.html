@@ -20,7 +20,7 @@
 			.i-slider, .i-toggle {
 			}
 
-			.i-slider:after, .i-toggle:after {
+			.i-toggle:after {
 				content: attr(value);
 			}
 		</style>
@@ -40,21 +40,34 @@
         </div>
         <div>
             <div id="readonly_slider"
-				i-slider="true" readonly="true" value="360" step="1" length="200" min="0" max="500">
+				i-slider="true" readonly="readonly" value="360" step="1" length="200" min="0" max="500">
             </div>
             <p> Readonly slider <br> 
 				Changing the "readonly" HTML attribue or DOM property can let you use it.</p>
         </div>
         <div>
             <div id="horiz_toggle"
-                onchange="document.getElementById('readonly_slider').setAttribute('readonly', Boolean(this.value))"
+                onchange="
+                    if (this.value) {
+                        document.getElementById('readonly_slider').setAttribute('readonly', 'readonly');
+                    }
+                    else {
+                        document.getElementById('readonly_slider').removeAttribute('readonly');
+                    }"
                 i-toggle="true" value="1" orientation="horizongtal" length="200">
             </div>
             <p> Slide or click to toggle the readonly attribute of the above slider </p>
         </div>
         <div>
             <div id="vert-toggle"
-				onchange="document.getElementById('horiz_toggle').setAttribute('readonly', Boolean(this.value))"
+                onchange="
+                    if (this.value) {
+                        document.getElementById('horiz_toggle').setAttribute('readonly', 'readonly');
+                    }
+                    else {
+                        document.getElementById('horiz_toggle').removeAttribute('readonly');
+                    }"
+				onchange="document.getElementById('horiz_toggle').setAttribute('readonly', (this.value == true)? 'readonly':'')"
 				i-toggle="true" value="0" orientation="vertical" handle-ratio="0.4" length="50">
 				</div>
             <p> Toggle this to change the readonly attribute of the toggle tool above</p>

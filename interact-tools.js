@@ -94,9 +94,17 @@
 			}
 			
 			if (newTool) {
-				var onchangeAttribute = newTool.element.getAttribute('onchange');
+				var onchangeAttribute = newTool.element.getAttribute('onchange'),
+                    onchangeProperty;
+
 				if (onchangeAttribute && !newTool.element.onchange) {
-					newTool.element.onchange = Function(onchangeAttribute);
+                    try {
+                        onchangeProperty = Function(onchangeAttribute);
+    					newTool.element.onchange = onchangeProperty;
+                    }
+                    catch (error) {
+                        console.log(error);
+                    }
 				}
 			}
 		}
@@ -119,6 +127,19 @@
 		return options;
 	}
 
+    function setReadonly (newValue) {
+        if (newValue == true) {
+            this.readonly = true;
+            this.element.readonly = true;
+            this.element.setAttribute('readonly', 'readonly');
+        }
+        else if (newValue == false) {
+            this.readonly = false;
+            this.element.readonly = false;
+            this.element.removeAttribute('readonly');
+        }
+    }
+
 	function Slider (element, options) {
 		if (element instanceof Element) {	
 			options = options || getAttributeOptions(element);
@@ -133,7 +154,7 @@
 			this.orientation = (options.orientation == 'vertical' || options.orientation === 'horizontal')?
 					options.orientation: 'horizontal';
 			this.length = Number(options.length) || 200;
-			this.readonly = (options.readonly === 'true');
+			this.readonly = (options.readonly === true || options.readonly !== null);
 
 			if (element instanceof HTMLElement) {
 				this.element = element;
@@ -162,7 +183,7 @@
 			}
 
 			this.set(this.value);
-			this.element.readonly = this.readonly;
+			this.setReadonly(this.readonly);
 
 			this.element.classList.add('i-slider');
 			this.container.classList.add('i-container');
@@ -189,19 +210,16 @@
 				 * was changed, make the slider readonly or not accordingly
 				 */
 				var slider = getSliderFromHandle(event.target),
-					readonlyAttribute = slider.element.getAttribute('readonly') === 'true';
+					readonlyAttribute = slider.element.getAttribute('readonly') !== null; 
 
 				if (readonlyAttribute !== slider.readonly) {
-					slider.readonly = slider.element.readonly = readonlyAttribute;
+					slider.setReadonly(readonlyAttribute);
 				}
 				else if (slider.element.readonly !== slider.readonly) {
-					slider.readonly =
-						slider.element.readonly =
-							(slider.element.readonly === true);
-					slider.element.setAttribute('readonly', slider.readonly);
+					slider.setReadonly(slider.element.readonly === true);
 				}
 
-				if (!slider.readonly) {
+				if (!slider.readonly && slider.element.getAttribute('disabled') === null) {
 					return 'drag';
 				}
 			},
@@ -213,7 +231,7 @@
 	Slider.prototype = {
 		set: function (newValue) {
 			var range = this.max - this.min,
-				length = this.length - Slider.handleSize,
+				length = this.length,// - Slider.handleSize,
 				position = (newValue - this.min) * length / range;
 
 			if (this.orientation === 'horizontal') {
@@ -228,11 +246,13 @@
 
 				this.element.value = this.value = newValue;
 				this.element.setAttribute('value', this.value);
+                this.handle.setAttribute('value', this.value);
 
 				changeEvent.initEvent('change', true, true);
 				this.element.dispatchEvent(changeEvent);
 			}
-		}
+		},
+        setReadonly: setReadonly
 	};
 
 	function Toggle (element, options) {
@@ -299,19 +319,16 @@
 				 * was changed, make the toggle readonly or not accordingly
 				 */
 				var toggle = getToggleFromHandle(event.target),
-					readonlyAttribute = toggle.element.getAttribute('readonly') === 'true';
+					readonlyAttribute = toggle.element.getAttribute('readonly') !== null;
 
 				if (readonlyAttribute !== toggle.readonly) {
-					toggle.readonly = toggle.element.readonly = readonlyAttribute;
+					toggle.setReadonly(readonlyAttribute);
 				}
 				else if (toggle.element.readonly !== toggle.readonly) {
-					toggle.readonly =
-						toggle.element.readonly =
-							(toggle.element.readonly === true);
-					toggle.element.setAttribute('readonly', toggle.readonly);
+					toggle.setReadonly(toggle.element.readonly);
 				}
 
-				if (!toggle.readonly) {
+				if (!toggle.readonly && toggle.element.getAttribute('disabled') === null) {
 					return 'drag';
 				}
 			},
@@ -350,11 +367,13 @@
 
 				this.element.value = this.value = newValue;
 				this.element.setAttribute('value', this.value);
+                this.handle.setAttribute('value', this.value);
 
 				changeEvent.initEvent('change', true, true);
 				this.element.dispatchEvent(changeEvent);
 			}
-		}
+		},
+        setReadonly: setReadonly
 	};
 
 
@@ -427,12 +446,10 @@
 			slider = getSliderFromHandle(handle),
             horizontal = (slider.orientation === 'horizontal'),
 
-			top = slider.element.offsetTop,
-			left = slider.element.offsetLeft,
-			length = slider.length - Slider.handleSize,
+			length = slider.length,// - Slider.handleSize,
 			position = (horizontal)?
-                event.detail.pageX - left:
-                event.detail.pageY - top,
+                event.detail.pageX - slider.element.offsetLeft:
+                event.detail.pageY - slider.element.offsetTop,
 			range = slider.max - slider.min,
 
 			// scale the cursor position according to slider range and dimensions
