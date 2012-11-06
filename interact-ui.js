@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2012 Taye Adeyemi
  * Open source under the MIT License.
- * https://raw.github.com/taye/interact-tools/master/LICENSE
+ * https://raw.github.com/taye/interact-ui/master/LICENSE
  */
 
 
@@ -610,7 +610,7 @@
 	events.add(document, 'interactdragmove', toolTypeMove);
 	events.add(document, 'DOMContentLoaded', init);
 
-	interact.tools = {
+	interact.ui = {
 		Slider: Slider,
 		Toggle: Toggle,
 		ColorPicker: ColorPicker,
