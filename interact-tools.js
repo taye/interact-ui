@@ -28,47 +28,80 @@
 		],
 		sliders = [],
 		toggles = [],
-		events = {
-			add: function (target, type, listener, useCapture) {
-				if (target.events === undefined) {
-					target.events = [];
+		colorPickers = [],
+		events = (function () {
+			'use strict';
+
+			var elements = [],
+				targets = [];
+
+			function add (element, type, listener, useCapture) {
+				if (!(element instanceof window.Element) && element !== window.document) {
+					return;
 				}
-				if (target.events[type] === undefined) {
+
+				var target = targets[elements.indexOf(element)];
+
+				if (!target) {
+					target = {
+						events: {}
+					}
+					target.events[type] = [];
+					elements.push(element);
+					targets.push(target);
+				}
+				if (typeof target.events[type] !== 'array') {
 					target.events[type] = [];
 				}
-
-				target.addEventListener(type, listener, useCapture || false);
 				target.events[type].push(listener);
 
-				return listener;
-			},
-			remove: function (target, type, listener, useCapture) {
-				var i;
+				return element.addEventListener(type, listener, useCapture || false);
+			}
 
-				if (!(target && target.events)) {
-					if (type === 'all') {
-						for (i = 0; i < target.events.length; i++) {
-							events.remove(target, target.events[i]);
+			function remove (element, type, listener, useCapture) {
+				var i,
+					target = targets(elements.indexOf(element));
+
+				if (index === -1) {
+					return;
+				}
+
+				if (target && target.events && target.events[type]) {
+
+					if (listener === 'all') {
+						for (i = 0; i < target.events[type].length; i++) {
+							element[removeEvent](type, target.events[type][i], useCapture || false);
+							target.events[type].splice(i, 1);
 						}
-					} else if (target.events[type].length) {
-						if (!listener) {
-							for (i = 0; i<target.events[type].length; i++) {
-								target.removeEventListener(type, target.events[type][i], useCapture || false);
+					} else {
+						for (i = 0; i < target.events[type].length; i++) {
+							if (target.events[type][i] === listener) {
+								element[removeEvent](type, target.events[type][i], useCapture || false);
 								target.events[type].splice(i, 1);
-							}
-						} else {
-							for (i = 0; i<target.events[type].length; i++) {
-								if (target.events[type][i] === listener) {
-									target.removeEventListener(type, listener, useCapture || false);
-									target.events[type].splice(i, 1);
-								}
 							}
 						}
 					}
 				}
 			}
-		};
-		
+
+			function removeAll (element) {
+				var type,
+					target = targets(elements.indexOf(element));
+
+				for (type in target.events) {
+					if (target.events.hasOwnProperty(type)) {
+						events.remove(target, type, 'all');
+					}
+				}
+			}
+
+			return {
+				add: add,
+				remove: remove,
+				removeAll: removeAll
+			};
+		}());
+
 	function make (nodeName) {
 		return document.createElement(nodeName);
 	}
@@ -86,11 +119,12 @@
 
 			if (elements[i].getAttribute('i-slider') === 'true') {
 				newTool = new Slider(elements[i]);
-				sliders.push(newTool);
 			}
 			else if (elements[i].getAttribute('i-toggle') === 'true') {
 				newTool = new Toggle(elements[i]);
-				toggles.push(newTool);
+			}
+			else if (elements[i].getAttribute('i-color-picker') === 'true') {
+				newTool = new ColorPicker(elements[i]);
 			}
 			
 			if (newTool) {
@@ -141,6 +175,12 @@
     }
 
 	function Slider (element, options) {
+		if (!element) {
+			element = make('div');
+			element.setAttribute('i-slider', 'true');
+		}
+		element.setAttribute('i-slider', 'true');
+
 		if (element instanceof Element) {	
 			options = options || getAttributeOptions(element);
 
@@ -154,7 +194,7 @@
 			this.orientation = (options.orientation == 'vertical' || options.orientation === 'horizontal')?
 					options.orientation: 'horizontal';
 			this.length = Number(options.length) || 200;
-			this.readonly = (options.readonly === true || options.readonly !== null);
+			this.readonly = (options.readonly == true);
 
 			if (element instanceof HTMLElement) {
 				this.element = element;
@@ -256,6 +296,12 @@
 	};
 
 	function Toggle (element, options) {
+		if (!element) {
+			element = make('div');
+			element.setAttribute('i-toggle', 'true');
+		}
+		element.setAttribute('i-toggle', 'true');
+
 		if (element instanceof Element) {
 			options = options || getAttributeOptions(element);
 
@@ -376,6 +422,69 @@
         setReadonly: setReadonly
 	};
 
+	function ColorPicker (element, options) {
+		options = options || getAttributeOptions (element);
+
+		var redElement = make('div'),
+			greenElement = make('div'),
+			blueElement = make('div');
+
+		redElement.classList.add('red');
+		greenElement.classList.add('green');
+		blueElement.classList.add('blue');
+
+		this.element = element;
+		this.red = new Slider (redElement, ColorPicker.rgbSliderOptions);
+		this.green = new Slider (greenElement, ColorPicker.rgbSliderOptions);
+		this.blue = new Slider (blueElement, ColorPicker.rgbSliderOptions);
+		this.display = make('div');
+		this.display.classList.add('display');
+		this.display.style.width = '100px';
+		this.display.style.height = '100px';
+
+		events.add(element, 'change', colorChange);
+
+		element.appendChild(this.display);
+		element.appendChild(redElement);
+		element.appendChild(greenElement);
+		element.appendChild(blueElement);
+
+		colorPickers.push(this);
+	}
+	
+	function colorChange (event) {
+		var picker = getColorPicker(this),
+			rgb;
+
+		rgb = [
+				'rgb(',
+				picker.red.value, ',',
+				picker.green.value, ',',
+				picker.blue.value,
+				')'
+			].join(' ');
+
+		if (picker.value !== rgb) {
+			picker.value = rgb;
+			picker.display.style.backgroundColor = picker.value;
+		}
+	}
+
+	ColorPicker.rgbSliderOptions = {
+		max: 255,
+		step: 1,
+		value: 125,
+		width: 100
+	}
+
+	function getColorPicker (element) {
+		for (var i = 0; i < colorPickers.length; i++) {
+			if (colorPickers[i].element === element) {
+				return colorPickers[i];
+			}
+		}
+		return -1;
+	}
 
 	function getSliderFromHandle (element) {
 		var i;
@@ -448,8 +557,8 @@
 
 			length = slider.length,// - Slider.handleSize,
 			position = (horizontal)?
-                event.detail.pageX - slider.element.offsetLeft:
-                event.detail.pageY - slider.element.offsetTop,
+                event.detail.pageX - slider.container.offsetLeft:
+                event.detail.pageY - slider.container.offsetTop,
 			range = slider.max - slider.min,
 
 			// scale the cursor position according to slider range and dimensions
@@ -504,6 +613,7 @@
 	interact.tools = {
 		Slider: Slider,
 		Toggle: Toggle,
+		ColorPicker: ColorPicker,
 
 		make: make,
 		makeNs: makeNs
