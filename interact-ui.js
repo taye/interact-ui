@@ -11,7 +11,7 @@
 	var interact = window.interact,
 		document = window.document,
 		console = window.console,
-		Elemeny = window.Element,
+		Element = window.Element,
 		HTMLElement = window.HTMLElement,
 		SVGElement = window.SVGElement,
 		svgNs = 'http://www.w3.org/2000/svg',
@@ -235,6 +235,7 @@
 			this.element.appendChild(this.container);
 
 			this.interactable = interact.set(this.handle, Slider.interactOptions);
+            events.add(this.element, 'interactdragmove', sliderDragMove);
 			
 			sliders.push(this);
 		}
@@ -350,6 +351,7 @@
 			this.element.appendChild(this.container);
 
 			this.interactable = interact.set(this.handle, Toggle.interactOptions);
+            events.add(this.element, 'interactdragmove', toggleDragMove);
 			
 			toggles.push(this);
 		}
@@ -468,6 +470,7 @@
 			picker.value = rgb;
 			picker.display.style.backgroundColor = picker.value;
 		}
+        event.stopPropagation();
 	}
 
 	ColorPicker.rgbSliderOptions = {
@@ -541,15 +544,6 @@
 		return null;
 	}
 
-	function toolTypeMove (event) {
-		if (event.target.parentNode.parentNode.getAttribute('i-slider') === 'true') {
-			sliderDragMove(event);
-		}
-		else if (event.target.parentNode.parentNode.getAttribute('i-toggle') === 'true') {
-			toggleDragMove(event);
-		}
-	}
-
 	function sliderDragMove (event) {
 		var handle = event.target,
 			slider = getSliderFromHandle(handle),
@@ -576,6 +570,8 @@
 				slider.max: value;
 
 		slider.set(value);
+
+        event.stopPropagation();
 	}
 
 	function toggleDragMove (event) {
@@ -594,6 +590,8 @@
 					1: toggle.value;
 
 		toggle.set(value);
+
+        event.stopPropagation();
 	}
 
 	function toggleClick (event) {
@@ -607,7 +605,6 @@
            .interactable.simulate('drag');
     }
 
-	events.add(document, 'interactdragmove', toolTypeMove);
 	events.add(document, 'DOMContentLoaded', init);
 
 	interact.ui = {
