@@ -193,7 +193,6 @@
 					this.max: this.value;
 			this.orientation = (options.orientation == 'vertical' || options.orientation === 'horizontal')?
 					options.orientation: 'horizontal';
-			this.length = Number(options.length) || 200;
 			this.readonly = (options.readonly == true);
 
 			if (element instanceof HTMLElement) {
@@ -203,11 +202,9 @@
 				this.handle = make('div');
 
                 if (this.orientation === 'vertical') {
-                    this.element.style.height = this.length + 'px';
                     this.element.classList.add('i-vertical');
                 }
                 else {
-                    this.element.style.width = this.length + 'px';
                     this.element.classList.add('i-horizontal');
                 }
 			}
@@ -272,14 +269,13 @@
 	Slider.prototype = {
 		set: function (newValue) {
 			var range = this.max - this.min,
-				length = this.length,// - Slider.handleSize,
-				position = (newValue - this.min) * length / range;
+				position = (newValue - this.min) * 100 / range;
 
 			if (this.orientation === 'horizontal') {
-				this.handle.style.left = position + 'px';
+				this.handle.style.left = position + '%';
 			}
 			else {
-				this.handle.style.top = position + 'px';
+				this.handle.style.top = position + '%';
 			}
 
 			if (newValue !== this.value) {
@@ -293,6 +289,11 @@
 				this.element.dispatchEvent(changeEvent);
 			}
 		},
+        length: function () {
+            return (this.orientation === 'horizontal')
+                ? this.container.offsetWidth
+                : this.container.offsetHeight;
+        },
         setReadonly: setReadonly
 	};
 
@@ -549,14 +550,14 @@
 			slider = getSliderFromHandle(handle),
             horizontal = (slider.orientation === 'horizontal'),
 
-			length = slider.length,// - Slider.handleSize,
-			position = (horizontal)?
-                event.detail.pageX - slider.container.offsetLeft:
-                event.detail.pageY - slider.container.offsetTop,
+			length = slider.length(),
+			position = (horizontal)
+                ? event.detail.pageX - slider.container.offsetLeft
+                : event.detail.pageY - slider.container.offsetTop,
 			range = slider.max - slider.min,
 
 			// scale the cursor position according to slider range and dimensions
-			value = position * range / slider.length + slider.min,
+			value = position * range / length + slider.min,
 			offset = value % slider.step || 0,
 			steps = Math.floor(value / slider.step);
 
