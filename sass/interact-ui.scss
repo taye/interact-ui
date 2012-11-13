@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2012 Taye Adeyemi
  * Open source under the MIT License.
- * https://raw.github.com/taye/interact-tools/master/LICENSE
+ * https://raw.github.com/taye/interact-ui/master/LICENSE
  */
 
 $default-slider-height: 30px;
@@ -26,9 +26,6 @@ $handle-border-blue: darken($blue, 20%);
 $bar-blue: lighten($blue, 20%);
 $bar-border-blue: darken($bar-blue, 10%);
 
-body {
-    margin: 30px;
-}
 
 .i-bar {
 	background-color: $bar-blue;
@@ -37,36 +34,41 @@ body {
 	border-radius: $default-bar-radius;
 }
 
-.i-handle {
+.i-handle,{
+    width: 0px;
+    height: 0px;
+
 	background-color: $handle-blue;
 
-	position: relative;
-
-    border: solid 3px;
+    border: none;
+    border-width: $default-border-width;
     border-color: $handle-border-blue;
     border-radius: $default-handle-radius;
 	cursor: pointer;
+
+	position: relative;
+}
+
+.i-handle::before {
+    background-color: inherit;
+
+    border: solid $default-border-width;
+    border-color: inherit;
+    border-radius: inherit;
+
+	position: absolute;
 }
 
 // Slider
 .i-slider {
-    width: 30px;
-	height: 30px;
+    width: 100%;
 
     .i-handle{
         &::before {
             content: "";
-
-            background-color: inherit;
-            border: solid;
-            border-color: inherit;
-            border-radius: $default-handle-radius;
-
-            position: absolute;
         }
         &::after {
             content: attr(value);
-
             border-radius: $default-label-radius;
 
             background-color: inherit;
@@ -90,29 +92,14 @@ body {
         .i-container {
             height: $default-slider-height;
             width: 100%;
-
-            margin: 0 ($default-handle-width + $default-border-width);
         }
         .i-handle {
-            top: 0px;
-            
-            width: $default-handle-width / 2;
-            height: $default-slider-height - $default-border-width * 2;
-
-            border-left-width: 0;
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-
             &::before {
-                top: -$default-border-width;
-                right: $default-handle-width / 2;
+                top: 0;
+                left: -($default-handle-width / 2 + $default-border-width);
 
-                width: $default-handle-width / 2;
+                width: $default-handle-width;
                 height: $default-slider-height - $default-border-width * 2;
-
-                border-right-width: 0;
-                border-top-right-radius: 0;
-                border-bottom-right-radius: 0;
             }
             &::after {
                 width: $default-label-width;
@@ -123,33 +110,21 @@ body {
         .i-bar {
             width: 100%;
             height: $default-bar-height;
-            margin: ($default-slider-height - $default-bar-height) / 2;
+            margin: ($default-slider-height - $default-bar-height) / 2 0;
         }
     }
     &.i-vertical {
         .i-container {
-            height: 100%;
+            height: 200px;
             width:  $default-slider-height;
-
-            margin: ($default-handle-width + $default-border-width) 0;
         }
         .i-handle {
-            height: $default-handle-width / 2;
-            width: $default-slider-height - $default-border-width * 2;
-            border-top-width: 0;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-
             &::before {
-                left: -$default-border-width;
-                bottom: $default-handle-width / 2;
+                left: 0;
+                top: -($default-handle-width / 2 + $default-border-width);
 
                 width: $default-slider-height - $default-border-width * 2;
-                height: $default-handle-width / 2;
-
-                border-bottom-width: 0;
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
+                height: $default-handle-width;
             }
             &::after {
                 width: $default-label-width;
@@ -160,7 +135,7 @@ body {
         .i-bar {
             width: $default-bar-height;
             height: 100%;
-            margin: ($default-slider-height - $default-bar-height) / 2;
+            margin: 0 ($default-slider-height - $default-bar-height) / 2;
         }
     }
 }
@@ -175,6 +150,9 @@ body {
     .i-container {
         padding: 0;
         border: none;
+    }
+    .i-handle {
+        border-style: solid;
     }
     &.i-horizontal {
         .i-container {
