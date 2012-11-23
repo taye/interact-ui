@@ -12,7 +12,13 @@
     var Slider = interact.Slider;
 
      function ColorPicker (element, options) {
-        options = options || getAttributeOptions (element);
+         // ensure that "new" is used
+         if (this === interact) {
+             return new ColorPicker(element, options);
+         }
+         
+        options = options || getAttributeOptions(element);
+        this.readonly = options.readonly;
 
         var redElement = make('div'),
             greenElement = make('div'),
@@ -30,7 +36,8 @@
         this.display.classList.add('display');
         this.display.style.width = '100px';
         this.display.style.height = '100px';
-
+         
+        this.setReadonly(this.readonly);
         events.add(element, 'change', colorChange);
 
         element.appendChild(this.display);
@@ -40,6 +47,25 @@
 
         colorPickers.push(this);
     }
+    
+    ColorPicker.prototype = {
+        setReadonly: function (newValue){
+            if (newValue === true) {
+                this.readonly = true;
+                this.element.readonly = true;
+                this.element.setAttribute('readonly', 'readonly');
+            }
+            else if (newValue === false) {
+                this.readonly = false;
+                this.element.readonly = false;
+                this.element.removeAttribute('readonly');
+            }
+            
+            this.red.setReadonly(this.readonly);
+            this.green.setReadonly(this.readonly);
+            this.blue.setReadonly(this.readonly);
+        }
+    };
     
     function colorChange (event) {
         var picker = getColorPicker(this),

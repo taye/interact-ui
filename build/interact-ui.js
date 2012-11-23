@@ -1,199 +1,217 @@
 /*
  * Copyright (c) 2012 Taye Adeyemi
- * Open source under the MIT License.
+ * interact-ui - https://github.com/taye/interact-ui
+ * 
+ * interact-ui is open source under the MIT License.
  * https://raw.github.com/taye/interact-ui/master/LICENSE
  */
 
 (function (window) {
     'use strict';
 
+/*
+ * Copyright (c) 2012 Taye Adeyemi
+ * This file is part of interact-ui - https://github.com/taye/interact-ui
+ * 
+ * interact-ui is open source under the MIT License.
+ * https://raw.github.com/taye/interact-ui/master/LICENSE
+ */
+
 var interact = window.interact,
-	document = window.document,
-	console = window.console,
-	Element = window.Element,
-	HTMLElement = window.HTMLElement,
-	SVGElement = window.SVGElement,
-	svgNs = 'http://www.w3.org/2000/svg',
-	optionAttributes = [
-		'min',
-		'max',
-		'step',
-		'length',
-		'readonly',
-		'orientation',
-		'value',
-		'list',
-		'handle-ratio'
-	],
-	sliders = [],
-	toggles = [],
-	colorPickers = [],
-	events = (function () {
-		'use strict';
+    document = window.document,
+    console = window.console,
+    Element = window.Element,
+    HTMLElement = window.HTMLElement,
+    SVGElement = window.SVGElement,
+    svgNs = 'http://www.w3.org/2000/svg',
+    optionAttributes = [
+        'min',
+        'max',
+        'step',
+        'length',
+        'readonly',
+        'orientation',
+        'value',
+        'list',
+        'handle-ratio'
+    ],
+    sliders = [],
+    toggles = [],
+    colorPickers = [],
+    events = (function () {
+        'use strict';
 
-		var elements = [],
-			targets = [];
+        var elements = [],
+            targets = [];
 
-		function add (element, type, listener, useCapture) {
-			if (!(element instanceof Element) && element !== document) {
-				return;
-			}
+        function add (element, type, listener, useCapture) {
+            if (!(element instanceof Element) && element !== document) {
+                return;
+            }
 
-			var target = targets[elements.indexOf(element)];
+            var target = targets[elements.indexOf(element)];
 
-			if (!target) {
-				target = {
-					events: {}
-				};
-				target.events[type] = [];
-				elements.push(element);
-				targets.push(target);
-			}
-			if (typeof target.events[type] !== 'array') {
-				target.events[type] = [];
-			}
-			target.events[type].push(listener);
+            if (!target) {
+                target = {
+                    events: {}
+                };
+                target.events[type] = [];
+                elements.push(element);
+                targets.push(target);
+            }
+            if (typeof target.events[type] !== 'array') {
+                target.events[type] = [];
+            }
+            target.events[type].push(listener);
 
-			return element.addEventListener(type, listener, useCapture || false);
-		}
-		
-		function remove (element, type, listener, useCapture) {
-			var i,
-			target = targets[elements.indexOf(element)];
-			
-			if (target && target.events && target.events[type]) {
-				if (listener === 'all') {
-					for (i = 0; i < target.events[type].length; i++) {
-						element.removeEventlistener(type, target.events[type][i], useCapture || false);
-						target.events[type].splice(i, 1);
-					}
-				} else {
-					for (i = 0; i < target.events[type].length; i++) {
-						if (target.events[type][i] === listener) {
-							element.removeEventlistener(type, target.events[type][i], useCapture || false);
-							target.events[type].splice(i, 1);
-						}
-					}
-				}
-			}
-		}
+            return element.addEventListener(type, listener, useCapture || false);
+        }
+        
+        function remove (element, type, listener, useCapture) {
+            var i,
+            target = targets[elements.indexOf(element)];
+            
+            if (target && target.events && target.events[type]) {
+                if (listener === 'all') {
+                    for (i = 0; i < target.events[type].length; i++) {
+                        element.removeEventlistener(type, target.events[type][i], useCapture || false);
+                        target.events[type].splice(i, 1);
+                    }
+                } else {
+                    for (i = 0; i < target.events[type].length; i++) {
+                        if (target.events[type][i] === listener) {
+                            element.removeEventlistener(type, target.events[type][i], useCapture || false);
+                            target.events[type].splice(i, 1);
+                        }
+                    }
+                }
+            }
+        }
 
-		function removeAll (element) {
-			var type,
-				target = targets(elements.indexOf(element));
+        function removeAll (element) {
+            var type,
+                target = targets(elements.indexOf(element));
 
-			for (type in target.events) {
-				if (target.events.hasOwnProperty(type)) {
-					events.remove(target, type, 'all');
-				}
-			}
-		}
+            for (type in target.events) {
+                if (target.events.hasOwnProperty(type)) {
+                    events.remove(target, type, 'all');
+                }
+            }
+        }
 
-		return {
-			add: add,
-			remove: remove,
-			removeAll: removeAll
-		};
-	}()),
-	onDomReady = [];
+        return {
+            add: add,
+            remove: remove,
+            removeAll: removeAll
+        };
+    }()),
+    onDomReady = [];
 
 function make (nodeName) {
-	return document.createElement(nodeName);
+    return document.createElement(nodeName);
 }
 
 function makeNs (nodeName) {
-	return document.createElementNS(svgNs, nodeName);
+    return document.createElementNS(svgNs, nodeName);
 }
 
 function init (event) {
-	var elements = document.body.querySelectorAll('*'),
-		i = 0;
+    var elements = document.body.querySelectorAll('*'),
+        i = 0;
 
-	for (i = 0; i < onDomReady.length; i++) {
-		onDomReady[i](event);
-	}
-	for (i = 0; i < elements.length; i++) {
-		var newTool;
+    for (i = 0; i < onDomReady.length; i++) {
+        onDomReady[i](event);
+    }
+    for (i = 0; i < elements.length; i++) {
+        var newTool;
 
-		if (elements[i].getAttribute('i-slider') === 'true') {
-			newTool = new interact.Slider(elements[i]);
-		}
-		else if (elements[i].getAttribute('i-toggle') === 'true') {
-			newTool = new interact.Toggle(elements[i]);
-		}
-		else if (elements[i].getAttribute('i-color-picker') === 'true') {
-			newTool = new interact.ColorPicker(elements[i]);
-		}
-		
-		if (newTool) {
-			var onchangeAttribute = newTool.element.getAttribute('onchange'),
-				onchangeProperty;
+        if (elements[i].getAttribute('i-slider') === 'true') {
+            newTool = new interact.Slider(elements[i]);
+        }
+        else if (elements[i].getAttribute('i-toggle') === 'true') {
+            newTool = new interact.Toggle(elements[i]);
+        }
+        else if (elements[i].getAttribute('i-color-picker') === 'true') {
+            newTool = new interact.ColorPicker(elements[i]);
+        }
+        
+        if (newTool) {
+            var onchangeAttribute = newTool.element.getAttribute('onchange'),
+                onchangeProperty;
 
-			if (onchangeAttribute && !newTool.element.onchange) {
-				try {
-					onchangeProperty = Function(onchangeAttribute);
-					newTool.element.onchange = onchangeProperty;
-				}
-				catch (error) {
-					console.log(error);
-				}
-			}
-		}
-	}
+            if (onchangeAttribute && !newTool.element.onchange) {
+                try {
+                    onchangeProperty = Function(onchangeAttribute);
+                    newTool.element.onchange = onchangeProperty;
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            }
+        }
+    }
 }
 
 function attributeGetter (element) {
-	return function (attribute) {
-			return element.getAttribute(attribute);
-		};
+    return function (attribute) {
+            return element.getAttribute(attribute);
+        };
 }
 
 function getAttributeOptions (element) {
-	var options = {},
-		get = attributeGetter(element),
-		i;
+    var options = {},
+        get = attributeGetter(element),
+        i;
 
-	for (i = 0; i < optionAttributes.length; i++) {
-		options[optionAttributes[i]] = get(optionAttributes[i]);
-	}
-	return options;
+    for (i = 0; i < optionAttributes.length; i++) {
+        options[optionAttributes[i]] = get(optionAttributes[i]);
+    }
+    options.readonly = (options.readonly !== null
+            && options.readonly != undefined
+            && options.readonly !== false);
+    return options;
 }
 
 function setReadonly (newValue) {
-	if (newValue === true) {
-		this.readonly = true;
-		this.element.readonly = true;
-		this.element.setAttribute('readonly', 'readonly');
-	}
-	else if (newValue === false) {
-		this.readonly = false;
-		this.element.readonly = false;
-		this.element.removeAttribute('readonly');
-	}
+    if (newValue === true) {
+        this.readonly = true;
+        this.element.readonly = true;
+        this.element.setAttribute('readonly', 'readonly');
+    }
+    else if (newValue === false) {
+        this.readonly = false;
+        this.element.readonly = false;
+        this.element.removeAttribute('readonly');
+    }
 }
 
 events.add(document, 'DOMContentLoaded', init);
 
 interact.ui = {
-	make: make,
-	makeNs: makeNs
+    make: make,
+    makeNs: makeNs
 };
 
-(function (interact) {
+/*
+ * Copyright (c) 2012 Taye Adeyemi
+ * This file is part of interact-ui - https://github.com/taye/interact-ui
+ * 
+ * interact-ui is open source under the MIT License.
+ * https://raw.github.com/taye/interact-ui/master/LICENSE
+ */
+
+ (function (interact) {
     'use script';
     
     function Slider (element, options) {
-		if (this === interact) {
-			return new Slider(element, options);
-		}
-
-        if (!element) {
-            element = make('div');
-            element.setAttribute('i-slider', 'true');
+        // ensure that "new" is used
+        if (this === interact) {
+            return new Slider(element, options);
         }
+
         element.setAttribute('i-slider', 'true');
 
-        if (element instanceof Element) {	
+        if (element instanceof Element) {   
             options = options || getAttributeOptions(element);
 
             this.step = Number(options.step) || 10;
@@ -205,7 +223,7 @@ interact.ui = {
                     this.max: this.value;
             this.orientation = (options.orientation == 'vertical' || options.orientation === 'horizontal')?
                     options.orientation: 'horizontal';
-            this.readonly = (options.readonly !== undefined && options.readonly !== false);
+            this.readonly = options.readonly;
 
             if (element instanceof HTMLElement) {
                 this.element = element;
@@ -370,15 +388,23 @@ interact.ui = {
     
 }(interact));
 
- 
-(function (interact) {
+/*
+ * Copyright (c) 2012 Taye Adeyemi
+ * This file is part of interact-ui - https://github.com/taye/interact-ui
+ * 
+ * interact-ui is open source under the MIT License.
+ * https://raw.github.com/taye/interact-ui/master/LICENSE
+ */
+
+ (function (interact) {
     'use script';
 
-    function Toggle (element, options) {
-        if (!element) {
-            element = make('div');
-            element.setAttribute('i-toggle', 'true');
-        }
+     function Toggle (element, options) {
+         // ensure that "new" is used
+         if (this === interact) {
+             return new Toggle(element, options);
+         }
+
         element.setAttribute('i-toggle', 'true');
 
         if (element instanceof Element) {
@@ -389,6 +415,7 @@ interact.ui = {
                     options.orientation: 'horizontal';
             this.length = Number(options.length) || 80;
             this.handleRatio = options['handle-ratio'] || Toggle.handleRatio;
+            this.readonly = (options.readonly !== null && options.readonly !== false);
 
             if (element instanceof HTMLElement) {
                 this.element = element;
@@ -417,6 +444,7 @@ interact.ui = {
             }
 
             this.set(this.value);
+            this.setReadonly(this.readonly);
             events.add(this.element, 'click', toggleClick);
 
             this.element.classList.add('i-toggle');
@@ -521,6 +549,39 @@ interact.ui = {
 
         event.stopPropagation();
     }
+     
+    function getToggleFromElement (element) {
+        var i;
+        
+        for (i = 0; i < toggles.length; i++) {
+            if (toggles[i].element === element) {
+                return toggles[i];
+            }
+        }
+        return null;
+    }
+    
+    function getToggleFromHandle (element) {
+        var i;
+        
+        for (i = 0; i < toggles.length; i++) {
+            if (toggles[i].handle === element) {
+                return toggles[i];
+            }
+        }
+        return null;
+    }
+    
+    function getToggleFromBar (element) {
+        var i;
+        
+        for (i = 0; i < toggles.length; i++) {
+            if (toggles[i].bar === element) {
+                return toggles[i];
+            }
+        }
+        return null;
+    }
 
     function toggleClick (event) {
         var toggle = getToggleFromElement(this);
@@ -532,78 +593,112 @@ interact.ui = {
     
 }(interact));
 
-  (function (interact) {
-	'use script';
+ /*
+ * Copyright (c) 2012 Taye Adeyemi
+ * This file is part of interact-ui - https://github.com/taye/interact-ui
+ * 
+ * interact-ui is open source under the MIT License.
+ * https://raw.github.com/taye/interact-ui/master/LICENSE
+ */
 
-	var Slider = interact.Slider;
+ (function (interact) {
+    'use script';
 
-	function ColorPicker (element, options) {
-		options = options || getAttributeOptions (element);
+    var Slider = interact.Slider;
 
-		var redElement = make('div'),
-			greenElement = make('div'),
-			blueElement = make('div');
+     function ColorPicker (element, options) {
+         // ensure that "new" is used
+         if (this === interact) {
+             return new ColorPicker(element, options);
+         }
+         
+        options = options || getAttributeOptions(element);
+        this.readonly = options.readonly;
 
-		redElement.classList.add('red');
-		greenElement.classList.add('green');
-		blueElement.classList.add('blue');
+        var redElement = make('div'),
+            greenElement = make('div'),
+            blueElement = make('div');
 
-		this.element = element;
-		this.red = new Slider (redElement, ColorPicker.rgbSliderOptions);
-		this.green = new Slider (greenElement, ColorPicker.rgbSliderOptions);
-		this.blue = new Slider (blueElement, ColorPicker.rgbSliderOptions);
-		this.display = make('div');
-		this.display.classList.add('display');
-		this.display.style.width = '100px';
-		this.display.style.height = '100px';
+        redElement.classList.add('red');
+        greenElement.classList.add('green');
+        blueElement.classList.add('blue');
 
-		events.add(element, 'change', colorChange);
+        this.element = element;
+        this.red = new Slider (redElement, ColorPicker.rgbSliderOptions);
+        this.green = new Slider (greenElement, ColorPicker.rgbSliderOptions);
+        this.blue = new Slider (blueElement, ColorPicker.rgbSliderOptions);
+        this.display = make('div');
+        this.display.classList.add('display');
+        this.display.style.width = '100px';
+        this.display.style.height = '100px';
+         
+        this.setReadonly(this.readonly);
+        events.add(element, 'change', colorChange);
 
-		element.appendChild(this.display);
-		element.appendChild(redElement);
-		element.appendChild(greenElement);
-		element.appendChild(blueElement);
+        element.appendChild(this.display);
+        element.appendChild(redElement);
+        element.appendChild(greenElement);
+        element.appendChild(blueElement);
 
-		colorPickers.push(this);
-	}
-	
-	function colorChange (event) {
-		var picker = getColorPicker(this),
-			rgb;
+        colorPickers.push(this);
+    }
+    
+    ColorPicker.prototype = {
+        setReadonly: function (newValue){
+            if (newValue === true) {
+                this.readonly = true;
+                this.element.readonly = true;
+                this.element.setAttribute('readonly', 'readonly');
+            }
+            else if (newValue === false) {
+                this.readonly = false;
+                this.element.readonly = false;
+                this.element.removeAttribute('readonly');
+            }
+            
+            this.red.setReadonly(this.readonly);
+            this.green.setReadonly(this.readonly);
+            this.blue.setReadonly(this.readonly);
+        }
+    };
+    
+    function colorChange (event) {
+        var picker = getColorPicker(this),
+            rgb;
 
-		rgb = [
-				'rgb(',
-				picker.red.value, ',',
-				picker.green.value, ',',
-				picker.blue.value,
-				')'
-			].join(' ');
+        rgb = [
+                'rgb(',
+                picker.red.value, ',',
+                picker.green.value, ',',
+                picker.blue.value,
+                ')'
+            ].join(' ');
 
-		if (picker.value !== rgb) {
-			picker.value = rgb;
-			picker.display.style.backgroundColor = picker.value;
-		}
+        if (picker.value !== rgb) {
+            picker.value = rgb;
+            picker.display.style.backgroundColor = picker.value;
+        }
         event.stopPropagation();
-	}
+    }
 
-	ColorPicker.rgbSliderOptions = {
-		max: 255,
-		step: 1,
-		value: 125,
-		width: 100
-	};
+    ColorPicker.rgbSliderOptions = {
+        max: 255,
+        step: 1,
+        value: 125,
+        width: 100
+    };
 
-	function getColorPicker (element) {
-		for (var i = 0; i < colorPickers.length; i++) {
-			if (colorPickers[i].element === element) {
-				return colorPickers[i];
-			}
-		}
-		return -1;
-	}
-	
-	interact.ColorPicker = ColorPicker;
-	
+    function getColorPicker (element) {
+        for (var i = 0; i < colorPickers.length; i++) {
+            if (colorPickers[i].element === element) {
+                return colorPickers[i];
+            }
+        }
+        return -1;
+    }
+    
+    interact.ColorPicker = ColorPicker;
+    
 }(interact));
 
 }(window));

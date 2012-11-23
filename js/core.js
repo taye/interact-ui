@@ -155,6 +155,9 @@ function getAttributeOptions (element) {
     for (i = 0; i < optionAttributes.length; i++) {
         options[optionAttributes[i]] = get(optionAttributes[i]);
     }
+    options.readonly = (options.readonly !== null
+            && options.readonly != undefined
+            && options.readonly !== false);
     return options;
 }
 

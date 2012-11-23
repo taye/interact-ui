@@ -10,10 +10,11 @@
     'use script';
     
     function Slider (element, options) {
-        if (!element) {
-            element = make('div');
-            element.setAttribute('i-slider', 'true');
+        // ensure that "new" is used
+        if (this === interact) {
+            return new Slider(element, options);
         }
+
         element.setAttribute('i-slider', 'true');
 
         if (element instanceof Element) {   
@@ -28,7 +29,7 @@
                     this.max: this.value;
             this.orientation = (options.orientation == 'vertical' || options.orientation === 'horizontal')?
                     options.orientation: 'horizontal';
-            this.readonly = (options.readonly !== undefined && options.readonly !== false);
+            this.readonly = options.readonly;
 
             if (element instanceof HTMLElement) {
                 this.element = element;
@@ -193,4 +194,3 @@
     
 }(interact));
 
- 

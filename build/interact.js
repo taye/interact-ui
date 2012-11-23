@@ -418,11 +418,11 @@
             y = event[type + 'Y'];
         }
 
-		// Opera Mobile handles the viewport and scrolling oddly 
-		if (navigator.appName == 'Opera' && supportsTouch) {
-			x -= window.scrollX;
-			y -= window.scrollY;
-		}
+        // Opera Mobile handles the viewport and scrolling oddly 
+        if (navigator.appName == 'Opera' && supportsTouch) {
+            x -= window.scrollX;
+            y -= window.scrollY;
+        }
 
         return {
             x: x,

@@ -10,10 +10,11 @@
     'use script';
 
      function Toggle (element, options) {
-        if (!element) {
-            element = make('div');
-            element.setAttribute('i-toggle', 'true');
-        }
+         // ensure that "new" is used
+         if (this === interact) {
+             return new Toggle(element, options);
+         }
+
         element.setAttribute('i-toggle', 'true');
 
         if (element instanceof Element) {
@@ -24,6 +25,7 @@
                     options.orientation: 'horizontal';
             this.length = Number(options.length) || 80;
             this.handleRatio = options['handle-ratio'] || Toggle.handleRatio;
+            this.readonly = (options.readonly !== null && options.readonly !== false);
 
             if (element instanceof HTMLElement) {
                 this.element = element;
@@ -52,6 +54,7 @@
             }
 
             this.set(this.value);
+            this.setReadonly(this.readonly);
             events.add(this.element, 'click', toggleClick);
 
             this.element.classList.add('i-toggle');
@@ -156,6 +159,39 @@
 
         event.stopPropagation();
     }
+     
+    function getToggleFromElement (element) {
+        var i;
+        
+        for (i = 0; i < toggles.length; i++) {
+            if (toggles[i].element === element) {
+                return toggles[i];
+            }
+        }
+        return null;
+    }
+    
+    function getToggleFromHandle (element) {
+        var i;
+        
+        for (i = 0; i < toggles.length; i++) {
+            if (toggles[i].handle === element) {
+                return toggles[i];
+            }
+        }
+        return null;
+    }
+    
+    function getToggleFromBar (element) {
+        var i;
+        
+        for (i = 0; i < toggles.length; i++) {
+            if (toggles[i].bar === element) {
+                return toggles[i];
+            }
+        }
+        return null;
+    }
 
     function toggleClick (event) {
         var toggle = getToggleFromElement(this);
@@ -167,4 +203,4 @@
     
 }(interact));
 
-  
+ 
