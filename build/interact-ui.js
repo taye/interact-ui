@@ -56,17 +56,12 @@ var interact = window.interact,
 
 			return element.addEventListener(type, listener, useCapture || false);
 		}
-
+		
 		function remove (element, type, listener, useCapture) {
 			var i,
-				target = targets(elements.indexOf(element));
-
-			if (index === -1) {
-				return;
-			}
-
+			target = targets[elements.indexOf(element)];
+			
 			if (target && target.events && target.events[type]) {
-
 				if (listener === 'all') {
 					for (i = 0; i < target.events[type].length; i++) {
 						element[removeEvent](type, target.events[type][i], useCapture || false);

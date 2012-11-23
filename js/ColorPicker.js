@@ -1,8 +1,8 @@
 (function (interact) {
 	'use script';
 
- 	var Slider = interact.Slider;
- 	
+	var Slider = interact.Slider;
+
 	function ColorPicker (element, options) {
 		options = options || getAttributeOptions (element);
 
@@ -57,7 +57,7 @@
 		step: 1,
 		value: 125,
 		width: 100
-	}
+	};
 
 	function getColorPicker (element) {
 		for (var i = 0; i < colorPickers.length; i++) {

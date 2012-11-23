@@ -26,7 +26,7 @@ var interact = window.interact,
 			targets = [];
 
 		function add (element, type, listener, useCapture) {
-			if (!(element instanceof window.Element) && element !== window.document) {
+			if (!(element instanceof Element) && element !== document) {
 				return;
 			}
 
@@ -35,7 +35,7 @@ var interact = window.interact,
 			if (!target) {
 				target = {
 					events: {}
-				}
+				};
 				target.events[type] = [];
 				elements.push(element);
 				targets.push(target);
@@ -55,13 +55,13 @@ var interact = window.interact,
 			if (target && target.events && target.events[type]) {
 				if (listener === 'all') {
 					for (i = 0; i < target.events[type].length; i++) {
-						element[removeEvent](type, target.events[type][i], useCapture || false);
+						element.removeEventlistener(type, target.events[type][i], useCapture || false);
 						target.events[type].splice(i, 1);
 					}
 				} else {
 					for (i = 0; i < target.events[type].length; i++) {
 						if (target.events[type][i] === listener) {
-							element[removeEvent](type, target.events[type][i], useCapture || false);
+							element.removeEventlistener(type, target.events[type][i], useCapture || false);
 							target.events[type].splice(i, 1);
 						}
 					}
@@ -134,7 +134,7 @@ function init (event) {
 }
 
 function attributeGetter (element) {
-	return 	function (attribute) {
+	return function (attribute) {
 			return element.getAttribute(attribute);
 		};
 }
@@ -151,12 +151,12 @@ function getAttributeOptions (element) {
 }
 
 function setReadonly (newValue) {
-	if (newValue == true) {
+	if (newValue === true) {
 		this.readonly = true;
 		this.element.readonly = true;
 		this.element.setAttribute('readonly', 'readonly');
 	}
-	else if (newValue == false) {
+	else if (newValue === false) {
 		this.readonly = false;
 		this.element.readonly = false;
 		this.element.removeAttribute('readonly');
