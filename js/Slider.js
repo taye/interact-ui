@@ -1,4 +1,12 @@
-(function (interact) {
+/*
+ * Copyright (c) 2012 Taye Adeyemi
+ * This file is part of interact-ui - https://github.com/taye/interact-ui
+ * 
+ * interact-ui is open source under the MIT License.
+ * https://raw.github.com/taye/interact-ui/master/LICENSE
+ */
+
+ (function (interact) {
     'use script';
     
     function Slider (element, options) {
@@ -8,7 +16,7 @@
         }
         element.setAttribute('i-slider', 'true');
 
-        if (element instanceof Element) {	
+        if (element instanceof Element) {   
             options = options || getAttributeOptions(element);
 
             this.step = Number(options.step) || 10;

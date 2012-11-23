@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2012 Taye Adeyemi
- * Open source under the MIT License.
+ * interact-ui - https://github.com/taye/interact-ui
+ * 
+ * interact-ui is open source under the MIT License.
  * https://raw.github.com/taye/interact-ui/master/LICENSE
  */
 

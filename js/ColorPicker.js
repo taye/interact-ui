@@ -1,74 +1,82 @@
-(function (interact) {
-	'use script';
+/*
+ * Copyright (c) 2012 Taye Adeyemi
+ * This file is part of interact-ui - https://github.com/taye/interact-ui
+ * 
+ * interact-ui is open source under the MIT License.
+ * https://raw.github.com/taye/interact-ui/master/LICENSE
+ */
 
-	var Slider = interact.Slider;
+ (function (interact) {
+    'use script';
 
-	function ColorPicker (element, options) {
-		options = options || getAttributeOptions (element);
+    var Slider = interact.Slider;
 
-		var redElement = make('div'),
-			greenElement = make('div'),
-			blueElement = make('div');
+     function ColorPicker (element, options) {
+        options = options || getAttributeOptions (element);
 
-		redElement.classList.add('red');
-		greenElement.classList.add('green');
-		blueElement.classList.add('blue');
+        var redElement = make('div'),
+            greenElement = make('div'),
+            blueElement = make('div');
 
-		this.element = element;
-		this.red = new Slider (redElement, ColorPicker.rgbSliderOptions);
-		this.green = new Slider (greenElement, ColorPicker.rgbSliderOptions);
-		this.blue = new Slider (blueElement, ColorPicker.rgbSliderOptions);
-		this.display = make('div');
-		this.display.classList.add('display');
-		this.display.style.width = '100px';
-		this.display.style.height = '100px';
+        redElement.classList.add('red');
+        greenElement.classList.add('green');
+        blueElement.classList.add('blue');
 
-		events.add(element, 'change', colorChange);
+        this.element = element;
+        this.red = new Slider (redElement, ColorPicker.rgbSliderOptions);
+        this.green = new Slider (greenElement, ColorPicker.rgbSliderOptions);
+        this.blue = new Slider (blueElement, ColorPicker.rgbSliderOptions);
+        this.display = make('div');
+        this.display.classList.add('display');
+        this.display.style.width = '100px';
+        this.display.style.height = '100px';
 
-		element.appendChild(this.display);
-		element.appendChild(redElement);
-		element.appendChild(greenElement);
-		element.appendChild(blueElement);
+        events.add(element, 'change', colorChange);
 
-		colorPickers.push(this);
-	}
-	
-	function colorChange (event) {
-		var picker = getColorPicker(this),
-			rgb;
+        element.appendChild(this.display);
+        element.appendChild(redElement);
+        element.appendChild(greenElement);
+        element.appendChild(blueElement);
 
-		rgb = [
-				'rgb(',
-				picker.red.value, ',',
-				picker.green.value, ',',
-				picker.blue.value,
-				')'
-			].join(' ');
+        colorPickers.push(this);
+    }
+    
+    function colorChange (event) {
+        var picker = getColorPicker(this),
+            rgb;
 
-		if (picker.value !== rgb) {
-			picker.value = rgb;
-			picker.display.style.backgroundColor = picker.value;
-		}
+        rgb = [
+                'rgb(',
+                picker.red.value, ',',
+                picker.green.value, ',',
+                picker.blue.value,
+                ')'
+            ].join(' ');
+
+        if (picker.value !== rgb) {
+            picker.value = rgb;
+            picker.display.style.backgroundColor = picker.value;
+        }
         event.stopPropagation();
-	}
+    }
 
-	ColorPicker.rgbSliderOptions = {
-		max: 255,
-		step: 1,
-		value: 125,
-		width: 100
-	};
+    ColorPicker.rgbSliderOptions = {
+        max: 255,
+        step: 1,
+        value: 125,
+        width: 100
+    };
 
-	function getColorPicker (element) {
-		for (var i = 0; i < colorPickers.length; i++) {
-			if (colorPickers[i].element === element) {
-				return colorPickers[i];
-			}
-		}
-		return -1;
-	}
-	
-	interact.ColorPicker = ColorPicker;
-	
+    function getColorPicker (element) {
+        for (var i = 0; i < colorPickers.length; i++) {
+            if (colorPickers[i].element === element) {
+                return colorPickers[i];
+            }
+        }
+        return -1;
+    }
+    
+    interact.ColorPicker = ColorPicker;
+    
 }(interact));
 

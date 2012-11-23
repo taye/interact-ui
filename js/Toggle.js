@@ -1,7 +1,15 @@
-(function (interact) {
+/*
+ * Copyright (c) 2012 Taye Adeyemi
+ * This file is part of interact-ui - https://github.com/taye/interact-ui
+ * 
+ * interact-ui is open source under the MIT License.
+ * https://raw.github.com/taye/interact-ui/master/LICENSE
+ */
+
+ (function (interact) {
     'use script';
 
-    function Toggle (element, options) {
+     function Toggle (element, options) {
         if (!element) {
             element = make('div');
             element.setAttribute('i-toggle', 'true');
