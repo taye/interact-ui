@@ -145,8 +145,9 @@
             toggle = getToggleFromHandle(handle),
             horizontal = (toggle.orientation === 'horizontal'),
 
-            top = toggle.element.offsetTop,
-            left = toggle.element.offsetLeft,
+            offsetXY = pageOffset(toggle.element),
+            left = offsetXY.x,
+            top = offsetXY.y,
             length = toggle.length,
             position = (horizontal)?
                 event.detail.pageX - left:

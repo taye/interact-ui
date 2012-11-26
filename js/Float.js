@@ -75,21 +75,18 @@
                     return 'drag';
                 }
             },
-        checkOnHover: true
     };
 
     Float.containerInteractOptions = {
-        resize: true
+        resize: true,
+        checkOnHover: true
     };
 
     Float.prototype = {
         setReadonly: setReadonly,
         position: function (x, y) {
             if (typeof x !== 'number' || typeof y !== 'number') {
-                return {
-                    x: this.element.offsetLeft,
-                    y: this.element.offsetTop
-                };
+                return pageOffset(this.element);
             }
             this.element.style.left = x + 'px';
             this.element.style.top = y + 'px';

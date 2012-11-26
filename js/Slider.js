@@ -166,9 +166,10 @@
             horizontal = (slider.orientation === 'horizontal'),
 
             length = slider.length(),
+            offsetXY = pageOffset(slider.container),
             position = (horizontal)
-                ? event.detail.pageX - slider.container.offsetLeft
-                : event.detail.pageY - slider.container.offsetTop,
+                ? event.detail.pageX - offsetXY.x
+                : event.detail.pageY - offsetXY.y,
             range = slider.max - slider.min,
 
             // scale the cursor position according to slider range and dimensions

@@ -105,6 +105,22 @@ function makeNs (nodeName) {
     return document.createElementNS(svgNs, nodeName);
 }
 
+// Get the absolute Position of the element
+var pageOffset = function (element) {
+    var parent = element,
+        left = element.offsetLeft,
+        top = element.offsetTop;
+
+    while (parent = parent.offsetParent) {
+        left += parent.offsetLeft;
+        top += parent.offsetTop;
+    }
+    return {
+        x: left,
+        y: top
+    };
+}
+
 function init (event) {
     var elements = document.body.querySelectorAll('*'),
         i = 0;
@@ -192,6 +208,7 @@ events.add(document, 'DOMContentLoaded', init);
 
 interact.ui = {
     make: make,
-    makeNs: makeNs
+    makeNs: makeNs,
+    pageOffset: pageOffset
 };
 

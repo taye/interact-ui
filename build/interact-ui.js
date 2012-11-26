@@ -116,6 +116,22 @@ function makeNs (nodeName) {
     return document.createElementNS(svgNs, nodeName);
 }
 
+// Get the absolute Position of the element
+var pageOffset = function (element) {
+    var parent = element,
+        left = element.offsetLeft,
+        top = element.offsetTop;
+
+    while (parent = parent.offsetParent) {
+        left += parent.offsetLeft;
+        top += parent.offsetTop;
+    }
+    return {
+        x: left,
+        y: top
+    };
+}
+
 function init (event) {
     var elements = document.body.querySelectorAll('*'),
         i = 0;
@@ -203,7 +219,8 @@ events.add(document, 'DOMContentLoaded', init);
 
 interact.ui = {
     make: make,
-    makeNs: makeNs
+    makeNs: makeNs,
+    pageOffset: pageOffset
 };
 
 /*
@@ -374,9 +391,10 @@ interact.ui = {
             horizontal = (slider.orientation === 'horizontal'),
 
             length = slider.length(),
+            offsetXY = pageOffset(slider.container),
             position = (horizontal)
-                ? event.detail.pageX - slider.container.offsetLeft
-                : event.detail.pageY - slider.container.offsetTop,
+                ? event.detail.pageX - offsetXY.x
+                : event.detail.pageY - offsetXY.y,
             range = slider.max - slider.min,
 
             // scale the cursor position according to slider range and dimensions
@@ -549,8 +567,9 @@ interact.ui = {
             toggle = getToggleFromHandle(handle),
             horizontal = (toggle.orientation === 'horizontal'),
 
-            top = toggle.element.offsetTop,
-            left = toggle.element.offsetLeft,
+            offsetXY = pageOffset(toggle.element),
+            left = offsetXY.x,
+            top = offsetXY.y,
             length = toggle.length,
             position = (horizontal)?
                 event.detail.pageX - left:
@@ -607,7 +626,8 @@ interact.ui = {
     
 }(interact));
 
- /*
+ 
+/*
  * Copyright (c) 2012 Taye Adeyemi
  * This file is part of interact-ui - https://github.com/taye/interact-ui
  * 
@@ -792,21 +812,18 @@ interact.ui = {
                     return 'drag';
                 }
             },
-        checkOnHover: true
     };
 
     Float.containerInteractOptions = {
-        resize: true
+        resize: true,
+        checkOnHover: true
     };
 
     Float.prototype = {
         setReadonly: setReadonly,
         position: function (x, y) {
             if (typeof x !== 'number' || typeof y !== 'number') {
-                return {
-                    x: this.element.offsetLeft,
-                    y: this.element.offsetTop
-                };
+                return pageOffset(this.element);
             }
             this.element.style.left = x + 'px';
             this.element.style.top = y + 'px';
