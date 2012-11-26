@@ -208,4 +208,26 @@ $bar-border-blue: darken($bar-blue, 10%);
     }
 }
 
+.i-float {
+    .i-handle {
+        width: 100%;
+        height: 20px;
+
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+
+        content: attr(title);
+        text-align: center;
+    }
+    .i-content {
+        background-color: white;
+        color: black;
+        overflow: hidden;
+    }
+
+    .i-container {
+        overflow: hidden;
+    }
+}
+
 

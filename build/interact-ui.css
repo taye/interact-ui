@@ -146,3 +146,20 @@
   background-color: #b3b3b3;
   border-color: #888888;
 }
+
+.i-float .i-handle {
+  width: 100%;
+  height: 20px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  content: attr(title);
+  text-align: center;
+}
+.i-float .i-content {
+  background-color: white;
+  color: black;
+  overflow: hidden;
+}
+.i-float .i-container {
+  overflow: hidden;
+}

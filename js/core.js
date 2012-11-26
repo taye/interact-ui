@@ -27,6 +27,7 @@ var interact = window.interact,
     sliders = [],
     toggles = [],
     colorPickers = [],
+    floats = [],
     events = (function () {
         'use strict';
 
@@ -171,6 +172,19 @@ function setReadonly (newValue) {
         this.readonly = false;
         this.element.readonly = false;
         this.element.removeAttribute('readonly');
+    }
+}
+
+function setDisabled (newValue) {
+    if (newValue === true) {
+        this.disabled = true;
+        this.element.disabled = true;
+        this.element.setAttribute('disabled', 'disabled');
+    }
+    else if (newValue === false) {
+        this.disabled = false;
+        this.element.disabled = false;
+        this.element.removeAttribute('disabled');
     }
 }
 

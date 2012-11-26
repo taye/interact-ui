@@ -7,7 +7,7 @@ BUILD_DIR = build
 INTERACT = $(JS_DIR)/interact.js
 INTERACTMIN = $(BUILD_DIR)/interact.min.js
 
-TOOLS = Slider Toggle ColorPicker
+TOOLS = Slider Toggle ColorPicker Float
 TOOL_FILES = $(addprefix $(JS_DIR)/, $(addsuffix .js, $(TOOLS)))
 
 TARGETJS = $(BUILD_DIR)/interact-ui.js
