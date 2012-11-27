@@ -37,8 +37,7 @@
         this.green = new Slider (greenElement, ColorPicker.rgbSliderOptions);
         this.blue = new Slider (blueElement, ColorPicker.rgbSliderOptions);
         this.display = make('div');
-        this.display.classList.add('display');
-        this.display.style.width = '100px';
+        this.display.classList.add('i-display');
         this.display.style.height = '100px';
          
         this.setReadonly(this.readonly);

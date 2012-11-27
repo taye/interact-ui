@@ -208,6 +208,32 @@ $bar-border-blue: darken($bar-blue, 10%);
     }
 }
 
+.i-colorPicker {
+    &>.i-container {
+        
+        .i-display {
+            width: 20%;
+            float:right;
+        }
+        .i-slider {
+            width: 75%;
+
+            &.red .i-handle {
+                background-color: red;
+                border-color: darken(red, 15%);
+            }
+            &.green .i-handle {
+                background-color: green;
+                border-color: darken(green, 15%);
+            }
+            &.blue .i-handle {
+                background-color: blue;
+                border-color: darken(blue, 15%);
+            }
+        }
+    }
+}
+
 .i-float {
     &>.i-container {
         overflow: hidden;
