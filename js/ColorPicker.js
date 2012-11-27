@@ -22,13 +22,17 @@
 
         var redElement = make('div'),
             greenElement = make('div'),
-            blueElement = make('div');
+            blueElement = make('div'),
+            container = make('div');
 
+        element.classList.add('i-colorPicker');
+        container.classList.add('i-container');
         redElement.classList.add('red');
         greenElement.classList.add('green');
         blueElement.classList.add('blue');
 
         this.element = element;
+        this.container = container;
         this.red = new Slider (redElement, ColorPicker.rgbSliderOptions);
         this.green = new Slider (greenElement, ColorPicker.rgbSliderOptions);
         this.blue = new Slider (blueElement, ColorPicker.rgbSliderOptions);
@@ -38,12 +42,13 @@
         this.display.style.height = '100px';
          
         this.setReadonly(this.readonly);
-        events.add(element, 'change', colorChange);
+        events.add(this.container, 'change', colorChange);
 
-        element.appendChild(this.display);
-        element.appendChild(redElement);
-        element.appendChild(greenElement);
-        element.appendChild(blueElement);
+        this.container.appendChild(this.display);
+        this.container.appendChild(redElement);
+        this.container.appendChild(greenElement);
+        this.container.appendChild(blueElement);
+        this.element.appendChild(this.container);
 
         colorPickers.push(this);
     }
@@ -68,7 +73,7 @@
     };
     
     function colorChange (event) {
-        var picker = getColorPicker(this),
+        var picker = getColorPickerFromContainer(this),
             rgb;
 
         rgb = [
@@ -80,8 +85,13 @@
             ].join(' ');
 
         if (picker.value !== rgb) {
-            picker.value = rgb;
+            var changeEvent = document.createEvent('Events');
+
+            changeEvent.initEvent('change', true, true);
+            
+            picker.value = picker.element.value = rgb;
             picker.display.style.backgroundColor = picker.value;
+            picker.element.dispatchEvent(changeEvent);
         }
         event.stopPropagation();
     }
@@ -96,6 +106,15 @@
     function getColorPicker (element) {
         for (var i = 0; i < colorPickers.length; i++) {
             if (colorPickers[i].element === element) {
+                return colorPickers[i];
+            }
+        }
+        return -1;
+    }
+
+    function getColorPickerFromContainer (element) {
+        for (var i = 0; i < colorPickers.length; i++) {
+            if (colorPickers[i].container === element) {
                 return colorPickers[i];
             }
         }
