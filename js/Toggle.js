@@ -15,7 +15,7 @@
              return new Toggle(element, options);
          }
 
-        element.setAttribute('i-toggle', 'true');
+        element.setAttribute('ui-toggle', 'true');
 
         if (element instanceof Element) {
             options = options || getAttributeOptions(element);
@@ -35,12 +35,12 @@
 
                 if (this.orientation === 'vertical') {
                     this.element.style.height = this.length + 'px';
-                    this.element.classList.add('i-vertical');
+                    this.element.classList.add('ui-vertical');
                     this.handle.style.height= this.length * this.handleRatio + 'px';
                 }
                 else {
                     this.element.style.width = this.length + 'px';
-                    this.element.classList.add('i-horizontal');
+                    this.element.classList.add('ui-horizontal');
                     this.handle.style.width = this.length * this.handleRatio + 'px';
                 }
             }
@@ -57,10 +57,10 @@
             this.setReadonly(this.readonly);
             events.add(this.element, 'click', toggleClick);
 
-            this.element.classList.add('i-toggle');
-            this.container.classList.add('i-container');
-            this.bar.classList.add('i-bar');
-            this.handle.classList.add('i-handle');
+            this.element.classList.add('ui-toggle');
+            this.container.classList.add('ui-container');
+            this.bar.classList.add('ui-bar');
+            this.handle.classList.add('ui-handle');
 
             this.container.appendChild(this.bar);
             this.container.appendChild(this.handle);

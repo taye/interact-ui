@@ -25,8 +25,8 @@
             blueElement = make('div'),
             container = make('div');
 
-        element.classList.add('i-colorPicker');
-        container.classList.add('i-container');
+        element.classList.add('ui-colorPicker');
+        container.classList.add('ui-container');
         redElement.classList.add('red');
         greenElement.classList.add('green');
         blueElement.classList.add('blue');
@@ -37,7 +37,7 @@
         this.green = new Slider (greenElement, ColorPicker.rgbSliderOptions);
         this.blue = new Slider (blueElement, ColorPicker.rgbSliderOptions);
         this.display = make('div');
-        this.display.classList.add('i-display');
+        this.display.classList.add('ui-display');
         this.display.style.height = '100px';
          
         this.setReadonly(this.readonly);

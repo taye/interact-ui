@@ -15,7 +15,7 @@
              return new Float(element, options);
          }
 
-        element.setAttribute('i-float', 'true');
+        element.setAttribute('ui-float', 'true');
 
         if (element instanceof Element) {
             options = options || getAttributeOptions(element);
@@ -35,10 +35,10 @@
             this.setReadonly(this.readonly);
             //events.add(this.element, 'click', floatClick);
 
-            this.element.classList.add('i-float');
-            this.container.classList.add('i-container');
-            this.content.classList.add('i-content');
-            this.handle.classList.add('i-handle');
+            this.element.classList.add('ui-float');
+            this.container.classList.add('ui-container');
+            this.content.classList.add('ui-content');
+            this.handle.classList.add('ui-handle');
 
             this.container.appendChild(this.handle);
             this.container.appendChild(this.content);

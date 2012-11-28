@@ -27,14 +27,14 @@ $bar-blue: lighten($blue, 20%);
 $bar-border-blue: darken($bar-blue, 10%);
 
 
-.i-bar {
+.ui-bar {
 	background-color: $bar-blue;
 
 	float: left;
 	border-radius: $default-bar-radius;
 }
 
-.i-handle,{
+.ui-handle,{
     width: 0px;
     height: 0px;
 
@@ -49,7 +49,7 @@ $bar-border-blue: darken($bar-blue, 10%);
 	position: relative;
 }
 
-.i-handle::before {
+.ui-handle::before {
     background-color: inherit;
 
     border: solid $default-border-width;
@@ -60,10 +60,10 @@ $bar-border-blue: darken($bar-blue, 10%);
 }
 
 // Slider
-.i-slider {
+.ui-slider {
     width: 100%;
 
-    .i-handle{
+    .ui-handle{
         &::before {
             content: "";
         }
@@ -83,17 +83,17 @@ $bar-border-blue: darken($bar-blue, 10%);
             }
         }
     }
-    .i-container {
+    .ui-container {
         padding: 0;
         margin: 0;
         border: none;
     }
-    &.i-horizontal {
-        .i-container {
+    &.ui-horizontal {
+        .ui-container {
             height: $default-slider-height;
             width: 100%;
         }
-        .i-handle {
+        .ui-handle {
             &::before {
                 top: 0;
                 left: -($default-handle-width / 2 + $default-border-width);
@@ -107,18 +107,18 @@ $bar-border-blue: darken($bar-blue, 10%);
                 left: -$default-label-width / 2;
             }
         }
-        .i-bar {
+        .ui-bar {
             width: 100%;
             height: $default-bar-height;
             margin: ($default-slider-height - $default-bar-height) / 2 0;
         }
     }
-    &.i-vertical {
-        .i-container {
+    &.ui-vertical {
+        .ui-container {
             height: 200px;
             width:  $default-slider-height;
         }
-        .i-handle {
+        .ui-handle {
             &::before {
                 left: 0;
                 top: -($default-handle-width / 2 + $default-border-width);
@@ -132,7 +132,7 @@ $bar-border-blue: darken($bar-blue, 10%);
                 left: $default-slider-height;
             }
         }
-        .i-bar {
+        .ui-bar {
             width: $default-bar-height;
             height: 100%;
             margin: 0 ($default-slider-height - $default-bar-height) / 2;
@@ -143,47 +143,47 @@ $bar-border-blue: darken($bar-blue, 10%);
 
 // Toggle
 
-.i-toggle {
+.ui-toggle {
     width: 30px;
 	height: 30px;
     
-    .i-container {
+    .ui-container {
         padding: 0;
         border: none;
     }
-    .i-handle {
+    .ui-handle {
         border-style: solid;
     }
-    &.i-horizontal {
-        .i-container {
+    &.ui-horizontal {
+        .ui-container {
     	    height: 30px;
     	    width: 100%;
         }
-        .i-handle {
+        .ui-handle {
             top: 0px;
             
             width: 50%;
             height: 24px;
         }
-        .i-bar {
+        .ui-bar {
             width: 100%;
             height: 20px;
             margin: 5px 0;
         }
     }
-    &.i-vertical {
-        .i-container {
+    &.ui-vertical {
+        .ui-container {
             height: 100%;
             width: 30px;
         }
-        .i-handle {
+        .ui-handle {
             left: 0px;
             
             width: 24px;
             height: 50%;
 
         }
-        .i-bar {
+        .ui-bar {
             width: 20px;
             height: 100%;
             margin: 0 5px;
@@ -192,9 +192,9 @@ $bar-border-blue: darken($bar-blue, 10%);
 
 }
 
-.i-slider[readonly], .i-toggle[readonly],
-.i-slider[disabled], .i-toggle[disabled], {
-    .i-handle {
+.ui-slider[readonly], .ui-toggle[readonly],
+.ui-slider[disabled], .ui-toggle[disabled], {
+    .ui-handle {
         background-color: grayscale($handle-blue);
         border-color: grayscale($handle-border-blue);
 
@@ -202,31 +202,31 @@ $bar-border-blue: darken($bar-blue, 10%);
             display: none;
         }
     }
-    .i-bar {
+    .ui-bar {
         background-color: grayscale($bar-blue);
         border-color: #888888;
     }
 }
 
-.i-colorPicker {
-    &>.i-container {
+.ui-colorPicker {
+    &>.ui-container {
         
-        .i-display {
+        .ui-display {
             width: 20%;
             float:right;
         }
-        .i-slider {
+        .ui-slider {
             width: 75%;
 
-            &.red .i-handle {
+            &.red .ui-handle {
                 background-color: red;
                 border-color: darken(red, 15%);
             }
-            &.green .i-handle {
+            &.green .ui-handle {
                 background-color: green;
                 border-color: darken(green, 15%);
             }
-            &.blue .i-handle {
+            &.blue .ui-handle {
                 background-color: blue;
                 border-color: darken(blue, 15%);
             }
@@ -234,11 +234,11 @@ $bar-border-blue: darken($bar-blue, 10%);
     }
 }
 
-.i-float {
-    &>.i-container {
+.ui-float {
+    &>.ui-container {
         overflow: hidden;
 
-        &>.i-handle {
+        &>.ui-handle {
             width: 100%;
             height: 20px;
 
@@ -248,7 +248,7 @@ $bar-border-blue: darken($bar-blue, 10%);
             content: attr(title);
             text-align: center;
         }
-        &>.i-content {
+        &>.ui-content {
             background-color: white;
             color: black;
             overflow: hidden;

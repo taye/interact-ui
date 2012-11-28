@@ -131,13 +131,13 @@ function init (event) {
     for (i = 0; i < elements.length; i++) {
         var newTool;
 
-        if (elements[i].getAttribute('i-slider') === 'true') {
+        if (elements[i].getAttribute('ui-slider') === 'true') {
             newTool = new interact.Slider(elements[i]);
         }
-        else if (elements[i].getAttribute('i-toggle') === 'true') {
+        else if (elements[i].getAttribute('ui-toggle') === 'true') {
             newTool = new interact.Toggle(elements[i]);
         }
-        else if (elements[i].getAttribute('i-color-picker') === 'true') {
+        else if (elements[i].getAttribute('ui-color-picker') === 'true') {
             newTool = new interact.ColorPicker(elements[i]);
         }
         

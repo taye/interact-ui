@@ -15,7 +15,7 @@
             return new Slider(element, options);
         }
 
-        element.setAttribute('i-slider', 'true');
+        element.setAttribute('ui-slider', 'true');
 
         if (element instanceof Element) {   
             options = options || getAttributeOptions(element);
@@ -38,10 +38,10 @@
                 this.handle = make('div');
 
                 if (this.orientation === 'vertical') {
-                    this.element.classList.add('i-vertical');
+                    this.element.classList.add('ui-vertical');
                 }
                 else {
-                    this.element.classList.add('i-horizontal');
+                    this.element.classList.add('ui-horizontal');
                 }
             }
             else if (element instanceof SVGElement) {
@@ -51,17 +51,17 @@
                 this.bar = make('rect');
                 this.handle = make('rect');
 
-                this.background.classList.add('i-background');
+                this.background.classList.add('ui-background');
                 this.container.appendChild(this.background);
             }
 
             this.set(this.value);
             this.setReadonly(this.readonly);
 
-            this.element.classList.add('i-slider');
-            this.container.classList.add('i-container');
-            this.bar.classList.add('i-bar');
-            this.handle.classList.add('i-handle');
+            this.element.classList.add('ui-slider');
+            this.container.classList.add('ui-container');
+            this.bar.classList.add('ui-bar');
+            this.handle.classList.add('ui-handle');
 
             this.container.appendChild(this.bar);
             this.container.appendChild(this.handle);
