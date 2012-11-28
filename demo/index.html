@@ -28,19 +28,19 @@
 	<body>
         <div>
             <div id="horiz_slider"
-                ui-slider="true" step="25" length="400" min="100" max="300">
+                ui="slider" step="25" length="400" min="100" max="300">
             </div>
             <p> Slide to set value </p>
         </div>
         <div>
             <div id="vert_slider"
-                ui-slider="true" orientation="vertical" step="10" length="200" min="0" max="500">
+                ui="slider" orientation="vertical" step="10" length="200" min="0" max="500">
             </div>
             <p> Slide to set value </p>
         </div>
         <div>
             <div id="readonly_slider"
-				ui-slider="true" readonly="readonly" value="360" step="1" length="200" min="0" max="500">
+				ui="slider" readonly="readonly" value="360" step="1" length="200" min="0" max="500">
             </div>
             <p> Readonly slider <br> 
 				Changing the "readonly" HTML attribue or DOM property can let you use it.</p>
@@ -54,7 +54,7 @@
                     else {
                         document.getElementById('readonly_slider').removeAttribute('readonly');
                     }"
-                ui-toggle="true" value="1" orientation="horizongtal" length="200">
+                ui="toggle" value="1" orientation="horizongtal" length="200">
             </div>
             <p> Slide or click to toggle the readonly attribute of the above slider </p>
         </div>
@@ -68,11 +68,11 @@
                         document.getElementById('horiz_toggle').removeAttribute('readonly');
                     }"
 				onchange="document.getElementById('horiz_toggle').setAttribute('readonly', (this.value == true)? 'readonly':'')"
-				ui-toggle="true" value="0" orientation="vertical" handle-ratio="0.4" length="50">
+				ui="toggle" value="0" orientation="vertical" handle-ratio="0.4" length="50">
 				</div>
             <p> Toggle this to change the readonly attribute of the toggle tool above</p>
         </div>
-		<div id="color_picker" ui-color-picker="true"></div>
+		<div id="color_picker" ui="colorPicker"></div>
 	</body>
 </html>
 

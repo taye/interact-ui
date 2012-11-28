@@ -191,7 +191,12 @@
         event.stopPropagation();
     }
     
-    interact.Slider = Slider;
+    interact.ui.addTool({
+            constructor: Slider,
+            constructorName: 'Slider',
+            typeSingular: 'slider',
+            typePlural: 'sliders'
+        });
     
 }(interact));
 

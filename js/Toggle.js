@@ -200,7 +200,12 @@
         toggle.set(!toggle.value);
     }
     
-    interact.Toggle = Toggle;
+    interact.ui.addTool({
+            constructor: Toggle,
+            constructorName: 'Toggle',
+            typeSingular: 'toggle',
+            typePlural: 'toggles'
+        });
     
 }(interact));
 

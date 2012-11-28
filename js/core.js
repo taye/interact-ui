@@ -24,6 +24,8 @@ var interact = window.interact,
         'list',
         'handle-ratio'
     ],
+    toolTypes = {},
+    tools = [],
     sliders = [],
     toggles = [],
     colorPickers = [],
@@ -121,6 +123,15 @@ var pageOffset = function (element) {
     };
 }
 
+function addTool (tool) {
+    toolTypes[tool.typeSingular] = tool.constructor;
+    tools[tool.typePlural] = [];
+
+    interact[tool.constructorName] = tool.constructor;
+
+    return interact;
+}
+
 function init (event) {
     var elements = document.body.querySelectorAll('*'),
         i = 0;
@@ -129,19 +140,12 @@ function init (event) {
         onDomReady[i](event);
     }
     for (i = 0; i < elements.length; i++) {
-        var newTool;
+        var newTool,
+            newType = elements[i].getAttribute('ui');
 
-        if (elements[i].getAttribute('ui-slider') === 'true') {
-            newTool = new interact.Slider(elements[i]);
-        }
-        else if (elements[i].getAttribute('ui-toggle') === 'true') {
-            newTool = new interact.Toggle(elements[i]);
-        }
-        else if (elements[i].getAttribute('ui-color-picker') === 'true') {
-            newTool = new interact.ColorPicker(elements[i]);
-        }
+        if (newType && toolTypes[newType]) {
+            newTool = new toolTypes[newType](elements[i]);
         
-        if (newTool) {
             var onchangeAttribute = newTool.element.getAttribute('onchange'),
                 onchangeProperty;
 
@@ -209,6 +213,7 @@ events.add(document, 'DOMContentLoaded', init);
 interact.ui = {
     make: make,
     makeNs: makeNs,
-    pageOffset: pageOffset
+    pageOffset: pageOffset,
+    addTool: addTool
 };
 

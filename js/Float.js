@@ -128,7 +128,12 @@
         return null;
     }
 
-   interact.Float = Float;
+    interact.ui.addTool({
+            constructor: Float,
+            constructorName: 'Float',
+            typeSingular: 'float',
+            typePlural: 'floats'
+        });
     
 }(interact));
 

@@ -120,7 +120,12 @@
         return -1;
     }
     
-    interact.ColorPicker = ColorPicker;
+    interact.ui.addTool({
+            constructor: ColorPicker,
+            constructorName: 'ColorPicker',
+            typeSingular: 'colorPicker',
+            typePlural: 'colorPickers'
+        });
     
 }(interact));
 
