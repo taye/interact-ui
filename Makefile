@@ -1,14 +1,16 @@
 .PHONY: all build clean
 
-JS_DIR = js
+SRC_DIR = src
+TOOLS_DIR = $(SRC_DIR)/tools
 BUILD_DIR = build
 
-
-INTERACT = $(JS_DIR)/interact.js
+INTERACT = $(SRC_DIR)/lib/interact.js
 INTERACTMIN = $(BUILD_DIR)/interact.min.js
 
-TOOLS = Slider Toggle ColorPicker Float
-TOOL_FILES = $(addprefix $(JS_DIR)/, $(addsuffix .js, $(TOOLS)))
+TOOLS = $(shell ls $(TOOLS_DIR))
+TOOL_FILES = $(addprefix $(TOOLS_DIR)/, $(TOOLS))
+
+SASS_DIR = $(SRC_DIR)/sass
 
 TARGETJS = $(BUILD_DIR)/interact-ui.js
 TARGETMINJS = $(BUILD_DIR)/interact-ui.min.js
@@ -28,18 +30,19 @@ endif
 all: build
 
 build:
-	cat js/head.js js/core.js > $(TARGETJS)
+	cat $(SRC_DIR)/head.js $(SRC_DIR)/core.js > $(TARGETJS)
 	cat $(TOOL_FILES) >> $(TARGETJS)
-	cat js/tail.js >> $(TARGETJS)
+	cat $(SRC_DIR)/tail.js >> $(TARGETJS)
 	
+	mkdir -p $(BUILD_DIR)
 	cp $(INTERACT) $(BUILD_DIR)
 	
-	$(SASS) --style expanded sass/interact-ui.scss:$(TARGETCSS)
+	$(SASS) --style expanded $(SASS_DIR)/interact-ui.scss:$(TARGETCSS)
 
 compress:
 	$(COMPILER) --js=$(TARGETJS) --js_output_file=$(TARGETMINJS)
 	$(COMPILER) --js=$(INTERACT) --js_output_file=$(INTERACTMIN)
-	$(SASS) --style compressed sass/interact-ui.scss:$(TARGETMINCSS)
+	$(SASS) --style compressed $(SASS_DIR)/interact-ui.scss:$(TARGETMINCSS)
 
 clean:
 	$(clean)
