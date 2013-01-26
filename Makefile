@@ -30,11 +30,12 @@ endif
 all: build
 
 build:
+	mkdir -p $(BUILD_DIR)
+	
 	cat $(SRC_DIR)/head.js $(SRC_DIR)/core.js > $(TARGETJS)
 	cat $(TOOL_FILES) >> $(TARGETJS)
 	cat $(SRC_DIR)/tail.js >> $(TARGETJS)
 	
-	mkdir -p $(BUILD_DIR)
 	cp $(INTERACT) $(BUILD_DIR)
 	
 	$(SASS) --style expanded $(SASS_DIR)/interact-ui.scss:$(TARGETCSS)
