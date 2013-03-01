@@ -76,10 +76,19 @@ $bar-border-blue: darken($bar-blue, 10%);
             color: white;
 
             position: absolute;
+
+            transition-property:  opacity;
+            transition-duration:  0.15s;
+            transition-delay:     0s;
         }
         &:not(:active):not(:hover):not(.interact-dragging) {
             &::after {
-                display: none;
+                visibility: hidden;
+                opacity: 0;
+
+                transition-property:  opacity , visibility;
+                transition-duration:  0.15s   , 0s;
+                transition-delay:     0s      , 0.15s;
             }
         }
     }
